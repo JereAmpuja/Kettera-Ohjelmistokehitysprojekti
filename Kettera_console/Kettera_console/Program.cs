@@ -3,19 +3,41 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Data.OleDb;
 using System.Data;
+using System.Data.Common;
+using System.IO;
+using Microsoft.Data.Sqlite;
+using System.Data.OleDb;
 
 namespace Kettera_console
 {
     public class dbConnection //Luokka jolla yhdistetään DATABASEEN.
     {
-        string connectionString = @"Kettera_console/Data/Kettera.accdb"; //Tietokannan sijainti (ainakin pitäisi olla XD).
+        string appLocation = AppDomain.CurrentDomain.BaseDirectory; //Tämä hakee ohjelman sijainnin.
+        string databasePath; //koko tietokannan sijainti tulee tähän rakentajassa.
+
         public dbConnection()
         {
+
+            databasePath = Path.GetFullPath(Path.Combine(appLocation, @"..\..\..", @"Kettera_console\Data\Kettera.accdb"));
+
+            // Testaa tulosteella
+            Console.WriteLine("Tietokannan polku: " + databasePath);
+            if (!File.Exists(databasePath))
+            {
+                Console.WriteLine("Tietokantatiedostoa ei löydy: " + databasePath);
+                return;
+            }
+            else if (File.Exists(databasePath))
+            {
+                Console.WriteLine("Tietokantatiedosto löytyi: " + databasePath);
+            }
+            databasePath = "Provider = Microsoft.ACE.OLEDB.12.0;" + @"Data Source = " + databasePath;
+
             OleDbConnection myConnection = new OleDbConnection(); //luo OleDbConnection tyyppisen olion.
-            myConnection.ConnectionString = connectionString; //Asettaa connectionstringin tietokannan sijainniksi.
+            myConnection.ConnectionString = databasePath; //Asettaa connectionstringin tietokannan sijainniksi.         
             myConnection.Open(); //Avaa yhteyden.
+
 
         
             //luodaan komento.
@@ -34,6 +56,20 @@ namespace Kettera_console
     {
         static void Main(string[] args)
         {
+            dbConnection db;
+
+            try
+            {
+               db = new dbConnection();
+                Console.WriteLine("Yhteys tietokantaan avattu onnistuneesti!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Yhteyden avaaminen epäonnistui.");
+                Console.WriteLine($"Virhe: {ex.Message}");
+            }
+
+
         }
     }
 }
