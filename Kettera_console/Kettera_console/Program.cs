@@ -11,6 +11,7 @@ using System.Data.OleDb;
 using System.Xml;
 using System.Windows.Input;
 using System.Xml.Linq;
+using System.Net.NetworkInformation;
 
 namespace Kettera_console
 {
@@ -24,6 +25,7 @@ namespace Kettera_console
 
         public List<Customer> customers = new List<Customer>();
         public List<PersonalTrainer> personalTrainers = new List<PersonalTrainer>();
+        public List<GroupClass> groupClass = new List<GroupClass>();
 
         public dbConnection()
         {
@@ -82,7 +84,7 @@ namespace Kettera_console
 
 
             //Seuraavaksi haetaan asiakkaat.
-            myCommand.CommandText = "SELECT * FROM customer ORDER BY customer_id";
+            myCommand.CommandText = "SELECT c.*, t.trainer_name FROM customer c LEFT JOIN trainer t ON t.trainer_id = c.trainer_ref ORDER BY c.customer_id;";
             myCommand.CommandType = CommandType.Text;
             myReader.Close();
             myReader = myCommand.ExecuteReader();
@@ -99,13 +101,7 @@ namespace Kettera_console
                 //haetaan asiakkaan PT:n nimi. 
                 c.PersonalTrainerID = Convert.ToInt16(myReader["trainer_ref"]);
                 int temp = Convert.ToInt16(myReader["trainer_ref"]);
-                for (int i = 0; i < personalTrainers.Count; i++)
-                {
-                    if (temp == personalTrainers[i].ID)
-                    {
-                        c.PersonalTrainerName = personalTrainers[i].Name;
-                    }
-                }
+                c.PersonalTrainerName = myReader["trainer_name"].ToString();
 
                 c.GymVisits = Convert.ToInt16(myReader["gym_visits"]);
                 c.GroupVisits = Convert.ToInt16(myReader["group_pt_visits"]);
@@ -113,24 +109,244 @@ namespace Kettera_console
                 customers.Add(c);
                 notEoF = myReader.Read();
             }
+
+            //Haetaan ryhmäliikuntatunnit. 
+            myCommand.CommandText = "SELECT g.*, t.trainer_name FROM group_class g LEFT JOIN trainer t ON t.trainer_id = g.trainer_ref ORDER BY dateandtime ASC;";
+            myCommand.CommandType = CommandType.Text;
+            myReader.Close();
+            myReader = myCommand.ExecuteReader();
+            notEoF = myReader.Read();
+            while (notEoF)
+            {
+                GroupClass gc = new GroupClass();
+                gc.ID = Convert.ToInt16(myReader["class_id"]);
+                gc.TrainerID = Convert.ToInt16(myReader["trainer_ref"]);
+                gc.TrainerName = myReader["trainer_name"].ToString();
+                gc.DateAndTime = Convert.ToDateTime(myReader["dateandtime"]);
+                gc.VisitorLimit = Convert.ToInt16(myReader["visitor_limit"]);
+                gc.VisitorCount = Convert.ToInt16(myReader["visitor_count"]);
+                groupClass.Add(gc);
+                notEoF = myReader.Read();             
+            }
             myReader.Close();
 
 
             return true;
 
         }
+
+        public bool executeQuery(string query)
+        {
+            try
+            {
+                myCommand.CommandText = query;
+                myCommand.ExecuteNonQuery();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("\nKyselyn suorittaminen epäonnistui. Virhe: " + ex.Message);
+                return false;
+            }
+        }
+
+        public Customer RequestCustomer() //Tulostaa asiakkaat ja palauttaa valitun asiakkaan ID:n. Tarkistaa myös että arvo löytyy
+        {
+            for (int i = 0; i < customers.Count; i++)
+            {
+                Console.WriteLine($"{customers[i].ID}: {customers[i].Name}");
+            }
+            Console.Write("\nSyötä asiakkaan ID: ");
+            try
+            {
+            int customerID = Convert.ToInt16(Console.ReadLine());
+            for (int i = 0; i < customers.Count; i++)
+                {
+                    if (customers[i].ID == customerID)
+                    {
+                        return customers[i];
+                    }
+                    else if (i == customers.Count - 1)
+                    {
+                        Console.WriteLine("\nAsiakasta ei löytynyt. Paina ENTER jatkaaksesi.");
+                        Console.ReadLine();
+                        Console.Clear();
+
+                    }
+                }
+            return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("\nAsiakkaan ID:n syöttäminen epäonnistui. Virhe: " + ex.Message);
+                Console.WriteLine("Paina ENTER jatkaaksesi.");
+                Console.ReadLine();
+                Console.Clear();
+                return null; ;
+            }         
+        }
+
+        public PersonalTrainer RequestTrainerID()
+        {
+            Console.WriteLine("Määritä valmentaja. Saatavilla olevat valmentajat:");
+            for (int i = 0; i < personalTrainers.Count; i++)
+            {
+                Console.WriteLine($"{personalTrainers[i].ID}: {personalTrainers[i].Name}");
+            }
+            Console.Write("\nSyötä valmentajan ID: ");
+            try
+            {
+                int trainerID = Convert.ToInt16(Console.ReadLine());
+                for (int i = 0; i < personalTrainers.Count; i++)
+                {
+                    if (personalTrainers[i].ID == trainerID)
+                    {
+                        return personalTrainers[i];
+                    }
+                    else if (i == personalTrainers.Count - 1)
+                    {
+                        Console.WriteLine("\nValmentajaa ei löytynyt. Paina ENTER jatkaaksesi.");
+                        Console.ReadLine();
+                        Console.Clear();
+                    }
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("\nValmentajan ID:n syöttäminen epäonnistui. Virhe: " + ex.Message);
+                Console.WriteLine("Paina ENTER jatkaaksesi.");
+                Console.ReadLine();
+                Console.Clear();
+                return null;
+            }
+        }
+
+        public GroupClass RequestGroupClass()
+        {
+            Console.WriteLine("Valitse ryhmäliikuntatunti jolle haluat lisätä asiakkaan. Saatavilla olevat tunnit:");
+            for (int i = 0; i < groupClass.Count; i++)
+            {
+                Console.WriteLine(groupClass[i].ToString());
+            }
+            Console.Write("\nSyötä ryhmäliikuntatunnin ID: ");
+            try
+            {
+                int groupClassID = Convert.ToInt16(Console.ReadLine());
+                for (int i = 0; i < groupClass.Count; i++)
+                {
+                    if (groupClass[i].ID == groupClassID)
+                    {
+                        return groupClass[i];
+                    }
+                    else if (i == groupClass.Count - 1)
+                    {
+                        Console.WriteLine("\nRyhmäliikuntatuntia ei löytynyt. Paina ENTER jatkaaksesi.");
+                        Console.ReadLine();
+                        Console.Clear();
+                    }
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("\nRyhmäliikuntatunnin ID:n syöttäminen epäonnistui. Virhe: " + ex.Message);
+                Console.WriteLine("Paina ENTER jatkaaksesi.");
+                Console.ReadLine();
+                Console.Clear();
+                return null;
+            }
+        }
+
+        public void PrintCustomersAndTrainers()
+        {
+            Console.WriteLine("Valmentajat:");
+            for (int i = 0; i < personalTrainers.Count; i++)
+            {
+                Console.WriteLine(personalTrainers[i].ToString());
+            }
+            Console.WriteLine("\nAsiakkaat:");
+            for (int i = 0; i < customers.Count; i++)
+            {
+                Console.WriteLine(customers[i].ToString());
+            }
+        }
+
+        public void PrintGroupClasses()
+        {
+            Console.WriteLine("Ryhmäliikuntatunnit:");
+            for (int i = 0; i < groupClass.Count; i++)
+            {
+                Console.WriteLine(groupClass[i].ToString());
+            }
+        }
     }
 
-    public class Lists
+    public class CalendarEvent
     {
-        public List<Customer> customers = new List<Customer>();
-        public List<PersonalTrainer> personalTrainers = new List<PersonalTrainer>();
+        public int ID { get; set; }
+        public DateTime Date { get; set; }
+        public int customerID { get; set; }
+        public int class_ref { get; set; }
+
+        public override string ToString()
+        {
+            return $"Reservation ID: {ID}, Class ID: {class_ref}, Date: {Date.ToString("dd-MM-yyyy HH:mm")}, Customer ID: {customerID}";
+        }
+    }
+    public class GroupClass
+    {
+        public int ID { get; set; }
+        public int TrainerID { get; set; }
+        public string TrainerName { get; set; }
+        public DateTime DateAndTime { get; set; }
+        public int VisitorLimit { get; set; }
+        public int VisitorCount { get; set; }
+
+        public GroupClass()
+        {
+            ID = 0;
+            TrainerID = 0;
+            TrainerName = "";
+            DateAndTime = DateTime.Now;
+            VisitorLimit = 0;
+            VisitorCount = 0;
+        }
+
+        public override string ToString()
+        {
+            return $"ID: {ID}, Trainer: {TrainerName}, Date and time: {DateAndTime.ToString("dd-MM-yyyy HH:mm")}";
+        }
+
+        public void AddGroupClass()
+        {
+            try
+            {
+                dbConnection db = new dbConnection();
+                string query = "INSERT INTO group_class (trainer_ref, dateandtime, visitor_limit, visitor_count)" +
+                                "VALUES ('" + TrainerID + "','" + DateAndTime.ToString("yyyy-MM-dd HH:mm") + "','" + VisitorLimit + "','" + VisitorCount + "');";
+                db.executeQuery(query);
+                db.myConnection.Close();
+                Console.WriteLine("\nRyhmäliikuntatunti lisätty tietokantaan onnistuneesti! Paina ENTER jatkaaksesi.");
+                Console.ReadLine();
+                
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("\nRyhmäliikuntatunnin lisääminen epäonnistui. Virhe: " + ex.Message);
+            }
+        }
     }
 
     public class PersonalTrainer
     {
         public int ID { get; set; }
         public string Name { get; set; }
+
+        public override string ToString()
+        {
+            return $"ID: {ID}, Name: {Name}";
+        }
     }
 
     public class Customer
@@ -170,33 +386,51 @@ namespace Kettera_console
             return $"ID: {ID}, Name: {Name}, Birthday: {BirthDay.ToString("dd-MM-yyyy")}, Membership end day: {MembershipEndDay.ToString("dd-MM-yyyy")}, Personal trainer: {PersonalTrainerName}, Gym visits: {GymVisits}, Group visits left: {GroupVisits}";
         }
 
-        public bool AddCustomer()
+        public void AddCustomer()
         { 
             try
             {
                 dbConnection db = new dbConnection();
-                db.myCommand.CommandText = "INSERT INTO customer(customer_name, birthday, trainer_ref, gym_visits, group_pt_visits, membership_end) " +
+                string query = "INSERT INTO customer (customer_name, birthday, trainer_ref, gym_visits, group_pt_visits, membership_end) " +
                 "VALUES ('" + Name + "','" + BirthDay + "','" + PersonalTrainerID + 
                 "','" + GymVisits + "','" + GroupVisits + "','" + MembershipEndDay + "')";
-                db.myCommand.ExecuteNonQuery();
+                db.executeQuery(query);
                 db.myConnection.Close();
 
-                Console.WriteLine("Asiakas lisätty tietokantaan onnistuneesti! Paina ENTER jatkaaksesi");
+                Console.WriteLine("\nAsiakas lisätty tietokantaan onnistuneesti! Paina ENTER jatkaaksesi");
                 Console.ReadLine();
                 Console.Clear();
-                return true;
             }
             
             catch (Exception ex) 
             { 
-                Console.WriteLine("Asiakkaan lisääminen tietokantaan epäonnistui. Virhe: " + ex.Message);
-                return false;
+                Console.WriteLine("\nAsiakkaan lisääminen tietokantaan epäonnistui. Virhe: " + ex.Message);
             }            
         }
 
-        public bool AssignTrainer()
+        public bool AssignNewTrainer()
         {
+            try
+            {
+            dbConnection db = new dbConnection();
+            db.GetInfo();
+            PersonalTrainer tempPT = db.RequestTrainerID();
+
+            string query = "UPDATE customer SET trainer_ref = " + tempPT.ID + " WHERE customer_id = " + ID;
+            db.executeQuery(query);
+            db.myConnection.Close();
+
+            Console.WriteLine("\nValmentaja päivitetty onnistuneesti! Paina ENTER jatkaaksesi.");
+            Console.ReadLine();
+            Console.Clear();
+
             return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("\nValmentajien haku tai päivitys epäonnistui. Virhe: " + ex.Message);
+                return false;
+            }       
         }
     }
 
@@ -228,18 +462,18 @@ namespace Kettera_console
             while (running)
             {
                 PrintManual('0');
-
+                char input = 'x';
                 try
                 {
-                    selectFunction(Convert.ToChar(Console.ReadLine()));
+                    input = Convert.ToChar(Console.ReadLine());
                 }
                 catch (Exception ex)
                 {
                     PrintManual('5');
 
                 }
-                
-                
+                selectFunction(input);
+
             }
 
         }
@@ -268,6 +502,8 @@ namespace Kettera_console
 
         static void selectFunction(char x)
         {
+            dbConnection db;
+            PersonalTrainer tempPT;
             switch (x)
             {
                 case '1': //Asiakkaan lisäys kyselyt, itse lisäys tehdään Customer luokan AddCustomer metodissa.
@@ -276,64 +512,80 @@ namespace Kettera_console
                     Console.Clear();
                     Console.Write("Asiakkaan nimi muodossa ETUNIMI SUKUNIMI: ");
                     string name = Console.ReadLine();
-                    Console.Write("Syntymäpäivä muodossa PP.KK.VVVV: ");
+                    Console.Write("\nSyntymäpäivä muodossa PP.KK.VVVV: ");
                     DateTime birthDay = Convert.ToDateTime(Console.ReadLine());
-                    Console.Write("Jäsenyyden päättymispäivä muodossa PP.KK.VVVV: ");
+                    Console.Write("\nJäsenyyden päättymispäivä muodossa PP.KK.VVVV: ");
                     DateTime membershipEndDay = Convert.ToDateTime(Console.ReadLine());
-                    Console.WriteLine("Määritä valmentaja. Saatavilla olevat valmentajat:");
-                        try
-                        {
-                            dbConnection db = new dbConnection();
-                            db.GetInfo();
-                            for (int i = 0; i < db.personalTrainers.Count; i++)
-                            {
-                                Console.WriteLine($"{db.personalTrainers[i].ID}: {db.personalTrainers[i].Name}");
-                            }
-                            db.myConnection.Close();
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine("Valmentajien haku epäonnistui. Virhe: " + ex.Message);
-                        }
-                    Console.Write("Syötä valmentajan numero: ");
-                    int personalTrainerID = Convert.ToInt16(Console.ReadLine());
-                    Console.Write("Ryhmä ja valmentaja käynnit: ");
+                    
+                    db = new dbConnection();
+                    db.GetInfo();
+                    tempPT = db.RequestTrainerID();
+                    int personalTrainerID = tempPT.ID;
+                    Console.Write("\nRyhmä ja valmentaja käynnit: ");
                     int groupVisits = Convert.ToInt16(Console.ReadLine());
                     Customer c = new Customer(name, birthDay, personalTrainerID, groupVisits, membershipEndDay); //Luodaan uusi asiakas olio.
                     c.AddCustomer(); //Kutsutaan olion AddCustomer metodia joka lisää asiakkaan tietokantaan.
                     }
                     catch
                     {
-                        Console.WriteLine("Tarkista tietojen syöttömuoto.");
+                        Console.WriteLine("Tarkista tietojen syöttömuoto. Paina ENTER jatkaaksesi.");
+                        Console.ReadLine();
+                        Console.Clear();
                     }                   
                     break;
-                case '2':
+
+                case '2': //Valmentajan määritys asiakkaalle.
+                    Console.Clear();
+                    Console.WriteLine("Valitse asiakas jolle haluat määrittää uuden valmentajan.}\n");
+                    db = new dbConnection();
+                    db.GetInfo(); //Hakee tiedot
                     
+                    Customer temp = db.RequestCustomer(); //Kutsuu funktion joka tulostaa asiakkaat, pyytää käyttäjää syöttämään asiakkaan ID:n ja palauttaa sen.
+                    if (temp == null)
+                    {
+                        break;
+                    }
+                    db.myConnection.Close();
+                    temp.AssignNewTrainer();
                     break;
+
                 case '3':
-                    
+                    Console.Clear();
+                    db = new dbConnection();
+                    db.GetInfo();
+                    GroupClass gc = new GroupClass();
+
+                    tempPT = db.RequestTrainerID();
+                    if (tempPT == null)
+                    {
+                        break;
+                    }
+                    gc.TrainerID = tempPT.ID;
+
+                    Console.Write("\nSyötä ryhmäliikuntatunnin päivämäärä ja aika muodossa 21.10.2027 18:50: ");
+                    gc.DateAndTime = Convert.ToDateTime(Console.ReadLine());
+
+                    Console.Write("\nSyötä ryhmäliikuntatunnin maksimi osallistujamäärä: ");
+                    gc.VisitorLimit = Convert.ToInt16(Console.ReadLine());
+
+                    gc.AddGroupClass();
+                    Console.Clear();
                     break;
+
                 case '4':
                     
                     break;
                 case '5': //Tulostaa asiakas ja valmentajatiedot.
                     Console.Clear();
-                    dbConnection dbc = new dbConnection();
-                    dbc.GetInfo();
-                    Console.WriteLine("Valmentajat:");
-                    for (int i = 0; i < dbc.personalTrainers.Count; i++)
-                    {
-                        Console.WriteLine($"{dbc.personalTrainers[i].ID}: {dbc.personalTrainers[i].Name}");
-                    }
-                    Console.WriteLine("\nAsiakkaat:");
-                    for (int i = 0; i < dbc.customers.Count; i++)
-                    {
-                        Console.WriteLine(dbc.customers[i].ToString());
-                    }
-                    dbc.myConnection.Close();
+                    db = new dbConnection();
+                    db.GetInfo();
+                    db.PrintCustomersAndTrainers();
+                    db.myConnection.Close();
+
                     Console.WriteLine("\nPaina ENTER jatkaaksesi.");
                     Console.ReadLine();
                     Console.Clear();
+
                     break;
             }
         }
