@@ -62,6 +62,7 @@ namespace Kettera_console
 
             myCommand.CommandType = CommandType.Text; //Määritetään kyselyn tyyppi (teksti).
 
+            //Console.WriteLine(myCommand.CommandText); //Tulostaa kyselyn konsoliin.
             OleDbDataReader myReader;
             myReader = myCommand.ExecuteReader(); //Suorittaa kyselyn ja palauttaa lukijan.
 
@@ -138,8 +139,10 @@ namespace Kettera_console
                     query += ", ";
                 }
             }
-            query += " WHERE " + keyField + " = " + keyValue ;
-            Console.WriteLine(query);
+            if (keyField != "" & keyValue != "")
+            {
+                query += " WHERE " + keyField + " = " + keyValue ;
+            }
 
             return query;
         }
@@ -170,7 +173,29 @@ namespace Kettera_console
             return query + ");";
         }
 
-        //Suorittaa insert into komennon tietokantaan. Kutsuu yllä olevaa metodia.
+        public string NonQueryDelete(string table, string keyField, string keyValue)
+        {
+            string query = "DELETE FROM " + table + " WHERE " + keyField + " = " + keyValue;
+            return query;
+        }
+
+        //Suorittaa delete komennon tietokantaan. Kutsuu yllä olevaa metodia.
+        public void ExecuteDelete(string table, string keyField, string keyValue)
+        {
+            string query = NonQueryDelete(table, keyField, keyValue);
+            OleDbCommand myCommand = new OleDbCommand();
+
+            myCommand.Connection = myConnection;
+
+            myCommand.CommandText = query;
+
+            myCommand.CommandType = CommandType.Text;
+
+            myCommand.ExecuteNonQuery();
+        }
+
+
+        //Suorittaa insert into komennon tietokantaan. Kutsuu yllä olevaa metodia "NonQueryInsertInto".
         public void ExecuteInsertInto(string table, string[] fields, string[] values)
         {
             string query = NonQueryInsertInto(table, fields, values);
@@ -181,7 +206,6 @@ namespace Kettera_console
             myCommand.CommandText = query;
 
             myCommand.CommandType = CommandType.Text;
-            Console.Write(query);
 
             myCommand.ExecuteNonQuery();
         }
@@ -321,6 +345,39 @@ namespace Kettera_console
                 notEoF = myReader.Read();
             }
             return groupClasses;
+        }
+
+        //Hakee kaikki kalenteritapahtumat tietokannasta ja palauttaa ne listana.
+        public List<CalendarEvent> GetAllCalendarEvents()
+        {
+            List<CalendarEvent> calendarEvents = new List<CalendarEvent>();
+            string[] fields = { "gcr.*, gc.dateandtime, cm.customer_name, gc.trainer_ref" };
+            string table = "(group_class_reservation AS gcr";
+            table += " LEFT JOIN customer AS cm ON cm.customer_id = gcr.customer_ref) " +
+                     "LEFT JOIN group_class AS gc ON gc.class_id = gcr.class_ref " +
+                     "ORDER BY dateandtime ASC";
+            OleDbDataReader myReader;
+            myReader = GetData(fields, table);
+
+            bool notEoF;
+
+            notEoF = myReader.Read();
+
+            while (notEoF)
+            {
+                CalendarEvent newCE;
+                int ID = Convert.ToInt16(myReader["reservation_id"]);
+                DateTime Date = Convert.ToDateTime(myReader["dateandtime"]);
+                int CustomerID = Convert.ToInt16(myReader["customer_ref"]);
+                string CustomerName = myReader["customer_name"].ToString();
+                int TrainerID = Convert.ToInt16(myReader["trainer_ref"]);
+                int ClassID = Convert.ToInt16(myReader["class_ref"]);
+
+                newCE = new CalendarEvent(ID, Date, CustomerID, CustomerName, ClassID, TrainerID);
+                calendarEvents.Add(newCE);
+                notEoF = myReader.Read();
+            }
+            return calendarEvents;
         }
 
 

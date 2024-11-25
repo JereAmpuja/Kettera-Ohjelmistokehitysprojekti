@@ -14,6 +14,8 @@ namespace Kettera_console
         public string customerName { get; set; }
         public int classID { get; set; }
 
+        public int trainerID { get; set; }
+
         public CalendarEvent()
         {
             ID = 0;
@@ -23,13 +25,14 @@ namespace Kettera_console
             classID = 0;
         }
 
-        public CalendarEvent(int newID, DateTime newDate, int NewCustomerID, string newCustomerName, int newClassID)
+        public CalendarEvent(int newID, DateTime newDate, int NewCustomerID, string newCustomerName, int newClassID, int newTrainerID)
         {
             ID = newID;
             Date = newDate;
             customerID = NewCustomerID;
             customerName = newCustomerName;
             classID = newClassID;
+            trainerID = newTrainerID;
         }
 
         public override string ToString()

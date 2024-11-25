@@ -25,52 +25,33 @@ namespace Kettera_console
             {
                 try
                 {
-                    Console.WriteLine("1. Lisää uusi asiakas");
-                    Console.WriteLine("2. Lisää ryhmäliikuntatunti");
-                    Console.WriteLine("3. Lisää varaus");
-                    Console.WriteLine("4. Poista varaus");
-                    Console.WriteLine("5. Poista asiakas");
-                    Console.WriteLine("6. Poista ryhmäliikuntatunti");
-                    Console.WriteLine("7. Näytä asiakkaat & valmentajat");
-                    Console.WriteLine("8. Näytä ryhmäliikuntatunnit");
-                    Console.WriteLine("9. Näytä varaukset");
+                    Console.WriteLine("1. Lisää ja hallinnoi asiakkaita.");
+                    Console.WriteLine("2. Lisää ja hallinnoi ryhmäliikuntatunteja");
+                    Console.WriteLine("3. Hallinnoi valmentajien tunteja");
+                    Console.WriteLine("4. Näytä asiakkaat & valmentajat");
+                    Console.WriteLine("5. Näytä ryhmäliikuntatunnit");
+                    Console.WriteLine("6. Näytä asiakkaiden varaukset");
                     Console.WriteLine("0. Lopeta");
                     Console.Write("\nValitse toiminto: ");
                     string input = Console.ReadLine();
                     switch (input)
                     {
                         case "1":
-                            ui.AddCustomer();
+                            ui.CustomerFunctions();
                             break;
                         case "2":
-                            ui.AssignNewPersonalTrainer();
+                            Console.Clear();
+                            ui.GroupClassFunctions();
                             break;
                         case "3":
-                            ui.AssignNewMembershipEnd();
                             break;
                         case "4":
-                            ui.RequestGroupClass();
-                            ui.continuePrompt();
                             break;
                         case "5":
-
                             break;
                         case "6":
-
-                            break;
-                        case "7":
-                            Console.Clear();
-                            ui.PrintAllTrainers();
-                            Console.WriteLine();
-                            ui.PrintAllCustomers();
-                            ui.continuePrompt();
-                            break;
-                        case "8":
-                            ui.PrintGroupClasses();
-                            ui.continuePrompt();
-                            break;
-                        case "9":
-
+                            ui.PrintAllCalendarEvents();
+                            Console.ReadKey();
                             break;
                         case "0":
                             running = false;
