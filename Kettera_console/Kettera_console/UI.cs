@@ -48,11 +48,9 @@ namespace Kettera_console
         {
             customers = db.GetAllCustomers();
 
-            Console.WriteLine($"{"ID",-3} {"Nimi",-20}");
-            Console.WriteLine(new string('-', 25));
             for (int i = 0; i < customers.Count; i++)
             {
-                Console.WriteLine($"{customers[i].ID + ":",-3} {customers[i].Name,-20}");
+                Console.WriteLine($"{customers[i].ID + ":"} {customers[i].Name}");
             }
             Console.Write("\nSyötä asiakkaan ID tai Nimi: ");
 
@@ -83,11 +81,9 @@ namespace Kettera_console
         {
             trainers = db.GetAllTrainers();
 
-            Console.WriteLine($"{"ID",-3} {"Nimi",-20}");
-            Console.WriteLine(new string('-', 25));
             for (int i = 0; i < trainers.Count; i++)
             {
-                Console.WriteLine($"{trainers[i].ID + ":",-3} {trainers[i].Name, -20}");
+                Console.WriteLine($"{trainers[i].ID + ":"} {trainers[i].Name}");
             }
             Console.Write("\nSyötä valmentajan ID tai Nimi: ");
          
@@ -140,21 +136,15 @@ namespace Kettera_console
         {
             customers = db.GetAllCustomers();
             Console.WriteLine("Asiakkaat:\n");
-            Console.WriteLine($"{"ID",-3} {"Nimi",-20}{"Syntymäpäivä",-20}{"Jäsenyyden päättymispäivä",-29} {"Valmentaja",-20}{"Käyntejä salilla",-20}{"Käyntejä ryhmäliikunnassa",-20}");
-            Console.WriteLine(new string('-', 139));
             for (int i = 0; i < customers.Count; i++)
             {
                 Console.WriteLine(customers[i].ToString());
             }
-
-
         }
         public void PrintAllTrainers()
         {
             trainers = db.GetAllTrainers();
             Console.WriteLine("Valmentajat:\n");
-            Console.WriteLine($"{"ID",-3} {"Nimi",-20}");
-            Console.WriteLine(new string('-', 20));
             for (int i = 0; i < trainers.Count; i++)
             {
                 Console.WriteLine(trainers[i].ToString());
@@ -167,8 +157,6 @@ namespace Kettera_console
             groupClasses = db.GetGroupClasses();
 
             Console.WriteLine("Ryhmäliikuntatunnit:");
-            Console.WriteLine($"\n{"ID",-3} {"Valmentaja",-19} {"Päivämäärä ja aika",-20}");
-            Console.WriteLine(new string('-', 75));
             for (int i = 0; i < groupClasses.Count; i++)
             {
                 Console.WriteLine(groupClasses[i].ToString());

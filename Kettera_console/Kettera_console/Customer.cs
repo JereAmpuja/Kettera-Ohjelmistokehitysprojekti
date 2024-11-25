@@ -57,7 +57,7 @@ namespace Kettera_console
         public override string ToString()
         {
 
-            return $"{ID,-4}{Name,-20}{BirthDay.ToString("dd-MM-yyyy"),-20}{MembershipEndDay.ToString("dd-MM-yyyy"),-30}{PersonalTrainerName,-20}{GymVisits,-20}{GroupVisits,-20}";
+            return $"ID: {ID}, Nimi: {Name}, Syntymäpäivä: {BirthDay.ToString("dd-MM-yyyy")}, Jäsenyyden loppumispäivä: {MembershipEndDay.ToString("dd-MM-yyyy")}, Valmentaja: {PersonalTrainerName}, Käyntejä kuntosalilla: {GymVisits}, Ryhmäliikuntakäyntejä: {GroupVisits}";
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Kettera_console
 
         public override string ToString()
         {
-            return $"{ID,-5}{Name,-20}";
+            return $"ID: {ID}, Nimi: {Name}";
         }
     }
 }

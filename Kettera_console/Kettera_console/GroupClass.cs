@@ -37,7 +37,7 @@ namespace Kettera_console
 
         public override string ToString()
         {
-            return $"{ID,-4}{TrainerName,-20}{DateAndTime.ToString("dd-MM-yyyy HH:mm"),- 20}";
+            return $"ID: {ID}, Trainer ID & Name: {TrainerID}, {TrainerName}, Date & Time: {DateAndTime.ToString("dd-MM-yyyy HH:mm")}, Visitor Limit: {VisitorLimit}, Visitor Count: {VisitorCount}";
         }
 
         public void AddGroupClass()
