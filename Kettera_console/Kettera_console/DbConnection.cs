@@ -143,6 +143,7 @@ namespace Kettera_console
             {
                 query += " WHERE " + keyField + " = " + keyValue ;
             }
+            Console.WriteLine(query);
 
             return query;
         }
@@ -223,6 +224,37 @@ namespace Kettera_console
             myCommand.CommandType = CommandType.Text;
 
             myCommand.ExecuteNonQuery();
+        }
+
+        public Customer GetCustomerByID(string custID)
+        {
+            Customer newC = null;
+            string[] fields = { "c.*, t.trainer_name" };
+            string table = "customer c LEFT JOIN trainer ON t.trainer_id = c.trainer_ref";
+
+            OleDbDataReader myReader;
+            myReader = GetDataWhere(fields, table, "customer_id", custID);
+
+            //Tarkistaa onko tietoja luettavana.
+            bool notEoF;
+
+            notEoF = myReader.Read();
+            //lukee tietoja niin kauan kun niitä on.
+            while (notEoF)
+            {
+                int ID = Convert.ToInt16(myReader["customer_id"]);
+                string Name = myReader["customer_name"].ToString();
+                DateTime BirthDay = Convert.ToDateTime(myReader["birthday"]);
+                int PersonalTrainerID = Convert.ToInt16(myReader["trainer_ref"]);
+                string PersonalTrainerName = myReader["trainer_name"].ToString();
+                int GymVisits = Convert.ToInt16(myReader["gym_visits"]);
+                int GroupVisits = Convert.ToInt16(myReader["group_pt_visits"]);
+                DateTime MembershipEndDay = Convert.ToDateTime(myReader["membership_end"]);
+
+                newC = new Customer(ID, Name, BirthDay, MembershipEndDay, PersonalTrainerID, PersonalTrainerName, GymVisits, GroupVisits);
+                break;
+            }
+            return newC;
         }
 
         //Hakee asiakkaan nimen perusteella ja palauttaa asiakas olion.

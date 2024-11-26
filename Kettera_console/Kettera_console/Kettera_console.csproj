@@ -87,6 +87,7 @@
     <Compile Include="Customer.cs" />
     <Compile Include="DbConnection.cs" />
     <Compile Include="GroupClass.cs" />
+    <Compile Include="GymManagement.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Trainer.cs" />

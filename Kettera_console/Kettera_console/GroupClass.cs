@@ -39,23 +39,5 @@ namespace Kettera_console
         {
             return $"ID: {ID}, Trainer ID & Name: {TrainerID}, {TrainerName}, Date & Time: {DateAndTime.ToString("dd-MM-yyyy HH:mm")}, Visitor Limit: {VisitorLimit}, Visitor Count: {VisitorCount}";
         }
-
-        public void AddGroupClass()
-        {
-            try
-            {
-                DbConnection db = new DbConnection();
-                string query = "INSERT INTO group_class (trainer_ref, dateandtime, visitor_limit, visitor_count)" +
-                                "VALUES ('" + TrainerID + "','" + DateAndTime.ToString("yyyy-MM-dd HH:mm") + "','" + VisitorLimit + "','" + VisitorCount + "');";
-               
-                Console.WriteLine("\nRyhmäliikuntatunti lisätty tietokantaan onnistuneesti! Paina ENTER jatkaaksesi.");
-                Console.ReadLine();
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("\nRyhmäliikuntatunnin lisääminen epäonnistui. Virhe: " + ex.Message);
-            }
-        }
     }
 }

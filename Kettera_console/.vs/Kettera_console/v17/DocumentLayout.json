@@ -3,20 +3,24 @@
   "WorkspaceRootPath": "C:\\Users\\jerea\\Documents\\GitHub\\Kettera-Ohjelmistokehitysprojekti\\Kettera_console\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{30067B98-59C1-48D3-A127-8162130EAE90}|Kettera_console\\Kettera_console.csproj|C:\\Users\\jerea\\Documents\\GitHub\\Kettera-Ohjelmistokehitysprojekti\\Kettera_console\\kettera_console\\customer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{30067B98-59C1-48D3-A127-8162130EAE90}|Kettera_console\\Kettera_console.csproj|solutionrelative:kettera_console\\customer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{30067B98-59C1-48D3-A127-8162130EAE90}|Kettera_console\\Kettera_console.csproj|C:\\Users\\jerea\\Documents\\GitHub\\Kettera-Ohjelmistokehitysprojekti\\Kettera_console\\kettera_console\\trainer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{30067B98-59C1-48D3-A127-8162130EAE90}|Kettera_console\\Kettera_console.csproj|solutionrelative:kettera_console\\trainer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{30067B98-59C1-48D3-A127-8162130EAE90}|Kettera_console\\Kettera_console.csproj|c:\\users\\jerea\\documents\\github\\kettera-ohjelmistokehitysprojekti\\kettera_console\\kettera_console\\ui.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{30067B98-59C1-48D3-A127-8162130EAE90}|Kettera_console\\Kettera_console.csproj|C:\\Users\\jerea\\Documents\\GitHub\\Kettera-Ohjelmistokehitysprojekti\\Kettera_console\\kettera_console\\ui.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{30067B98-59C1-48D3-A127-8162130EAE90}|Kettera_console\\Kettera_console.csproj|solutionrelative:kettera_console\\ui.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{30067B98-59C1-48D3-A127-8162130EAE90}|Kettera_console\\Kettera_console.csproj|C:\\Users\\jerea\\Documents\\GitHub\\Kettera-Ohjelmistokehitysprojekti\\Kettera_console\\kettera_console\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{30067B98-59C1-48D3-A127-8162130EAE90}|Kettera_console\\Kettera_console.csproj|solutionrelative:kettera_console\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{30067B98-59C1-48D3-A127-8162130EAE90}|Kettera_console\\Kettera_console.csproj|c:\\users\\jerea\\documents\\github\\kettera-ohjelmistokehitysprojekti\\kettera_console\\kettera_console\\gymmanagement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{30067B98-59C1-48D3-A127-8162130EAE90}|Kettera_console\\Kettera_console.csproj|solutionrelative:kettera_console\\gymmanagement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{30067B98-59C1-48D3-A127-8162130EAE90}|Kettera_console\\Kettera_console.csproj|c:\\users\\jerea\\documents\\github\\kettera-ohjelmistokehitysprojekti\\kettera_console\\kettera_console\\customer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{30067B98-59C1-48D3-A127-8162130EAE90}|Kettera_console\\Kettera_console.csproj|solutionrelative:kettera_console\\customer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{30067B98-59C1-48D3-A127-8162130EAE90}|Kettera_console\\Kettera_console.csproj|C:\\Users\\jerea\\Documents\\GitHub\\Kettera-Ohjelmistokehitysprojekti\\Kettera_console\\kettera_console\\dbconnection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{30067B98-59C1-48D3-A127-8162130EAE90}|Kettera_console\\Kettera_console.csproj|solutionrelative:kettera_console\\dbconnection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{30067B98-59C1-48D3-A127-8162130EAE90}|Kettera_console\\Kettera_console.csproj|C:\\Users\\jerea\\Documents\\GitHub\\Kettera-Ohjelmistokehitysprojekti\\Kettera_console\\kettera_console\\groupclass.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -27,8 +31,8 @@
       "RelativeMoniker": "D:0:0:{30067B98-59C1-48D3-A127-8162130EAE90}|Kettera_console\\Kettera_console.csproj|solutionrelative:kettera_console\\calendarevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{30067B98-59C1-48D3-A127-8162130EAE90}|Kettera_console\\Kettera_console.csproj|C:\\Users\\jerea\\Documents\\GitHub\\Kettera-Ohjelmistokehitysprojekti\\Kettera_console\\kettera_console\\dbconnection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{30067B98-59C1-48D3-A127-8162130EAE90}|Kettera_console\\Kettera_console.csproj|solutionrelative:kettera_console\\dbconnection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{30067B98-59C1-48D3-A127-8162130EAE90}|Kettera_console\\Kettera_console.csproj|C:\\Users\\jerea\\Documents\\GitHub\\Kettera-Ohjelmistokehitysprojekti\\Kettera_console\\kettera_console\\trainer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{30067B98-59C1-48D3-A127-8162130EAE90}|Kettera_console\\Kettera_console.csproj|solutionrelative:kettera_console\\trainer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -38,82 +42,82 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
+              "Title": "GymManagement.cs",
+              "DocumentMoniker": "C:\\Users\\jerea\\Documents\\GitHub\\Kettera-Ohjelmistokehitysprojekti\\Kettera_console\\Kettera_console\\GymManagement.cs",
+              "RelativeDocumentMoniker": "Kettera_console\\GymManagement.cs",
+              "ToolTip": "C:\\Users\\jerea\\Documents\\GitHub\\Kettera-Ohjelmistokehitysprojekti\\Kettera_console\\Kettera_console\\GymManagement.cs",
+              "RelativeToolTip": "Kettera_console\\GymManagement.cs",
+              "ViewState": "AQIAAIIAAAAAAAAAAAAiwIcAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-26T10:19:49.418Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "Trainer.cs",
               "DocumentMoniker": "C:\\Users\\jerea\\Documents\\GitHub\\Kettera-Ohjelmistokehitysprojekti\\Kettera_console\\Kettera_console\\Trainer.cs",
               "RelativeDocumentMoniker": "Kettera_console\\Trainer.cs",
               "ToolTip": "C:\\Users\\jerea\\Documents\\GitHub\\Kettera-Ohjelmistokehitysprojekti\\Kettera_console\\Kettera_console\\Trainer.cs",
               "RelativeToolTip": "Kettera_console\\Trainer.cs",
-              "ViewState": "AQIAAAoAAAAAAAAAAAAzwAoAAAAjAAAA",
+              "ViewState": "AQIAAAsAAAAAAAAAAAAxwAoAAAAjAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-25T08:13:59.119Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "GroupClass.cs",
               "DocumentMoniker": "C:\\Users\\jerea\\Documents\\GitHub\\Kettera-Ohjelmistokehitysprojekti\\Kettera_console\\Kettera_console\\GroupClass.cs",
               "RelativeDocumentMoniker": "Kettera_console\\GroupClass.cs",
               "ToolTip": "C:\\Users\\jerea\\Documents\\GitHub\\Kettera-Ohjelmistokehitysprojekti\\Kettera_console\\Kettera_console\\GroupClass.cs",
               "RelativeToolTip": "Kettera_console\\GroupClass.cs",
-              "ViewState": "AQIAABMAAAAAAAAAAAAwwCcAAADFAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA4AAAArAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-25T08:13:57.213Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "DbConnection.cs",
-              "DocumentMoniker": "C:\\Users\\jerea\\Documents\\GitHub\\Kettera-Ohjelmistokehitysprojekti\\Kettera_console\\Kettera_console\\DbConnection.cs",
-              "RelativeDocumentMoniker": "Kettera_console\\DbConnection.cs",
-              "ToolTip": "C:\\Users\\jerea\\Documents\\GitHub\\Kettera-Ohjelmistokehitysprojekti\\Kettera_console\\Kettera_console\\DbConnection.cs",
-              "RelativeToolTip": "Kettera_console\\DbConnection.cs",
-              "ViewState": "AQIAAGoBAAAAAAAAAAAAAHcBAABgAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-25T08:06:44.911Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "UI.cs",
               "DocumentMoniker": "C:\\Users\\jerea\\Documents\\GitHub\\Kettera-Ohjelmistokehitysprojekti\\Kettera_console\\Kettera_console\\UI.cs",
               "RelativeDocumentMoniker": "Kettera_console\\UI.cs",
               "ToolTip": "C:\\Users\\jerea\\Documents\\GitHub\\Kettera-Ohjelmistokehitysprojekti\\Kettera_console\\Kettera_console\\UI.cs",
               "RelativeToolTip": "Kettera_console\\UI.cs",
-              "ViewState": "AQIAADkAAAAAAAAAAAAAAEgAAAAdAAAA",
+              "ViewState": "AQIAADUAAAAAAAAAAAAiwEEAAAAYAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-25T08:14:00.056Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Customer.cs",
-              "DocumentMoniker": "C:\\Users\\jerea\\Documents\\GitHub\\Kettera-Ohjelmistokehitysprojekti\\Kettera_console\\Kettera_console\\Customer.cs",
-              "RelativeDocumentMoniker": "Kettera_console\\Customer.cs",
-              "ToolTip": "C:\\Users\\jerea\\Documents\\GitHub\\Kettera-Ohjelmistokehitysprojekti\\Kettera_console\\Kettera_console\\Customer.cs",
-              "RelativeToolTip": "Kettera_console\\Customer.cs",
-              "ViewState": "AQIAAAwAAAAAAAAAAAAYwBMAAABLAAAA",
+              "DocumentIndex": 4,
+              "Title": "DbConnection.cs",
+              "DocumentMoniker": "C:\\Users\\jerea\\Documents\\GitHub\\Kettera-Ohjelmistokehitysprojekti\\Kettera_console\\Kettera_console\\DbConnection.cs",
+              "RelativeDocumentMoniker": "Kettera_console\\DbConnection.cs",
+              "ToolTip": "C:\\Users\\jerea\\Documents\\GitHub\\Kettera-Ohjelmistokehitysprojekti\\Kettera_console\\Kettera_console\\DbConnection.cs",
+              "RelativeToolTip": "Kettera_console\\DbConnection.cs",
+              "ViewState": "AQIAAJIBAAAAAAAAAAAAAI0BAAAaAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-25T08:13:53.577Z",
+              "WhenOpened": "2024-11-25T08:06:44.911Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "CalendarEvent.cs",
               "DocumentMoniker": "C:\\Users\\jerea\\Documents\\GitHub\\Kettera-Ohjelmistokehitysprojekti\\Kettera_console\\Kettera_console\\CalendarEvent.cs",
               "RelativeDocumentMoniker": "Kettera_console\\CalendarEvent.cs",
               "ToolTip": "C:\\Users\\jerea\\Documents\\GitHub\\Kettera-Ohjelmistokehitysprojekti\\Kettera_console\\Kettera_console\\CalendarEvent.cs",
               "RelativeToolTip": "Kettera_console\\CalendarEvent.cs",
-              "ViewState": "AQIAABAAAAAAAAAAAAAYwCIAAAAbAAAA",
+              "ViewState": "AQIAABkAAAAAAAAAAAAwwCgAAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-25T08:13:54.839Z",
               "EditorCaption": ""
@@ -121,12 +125,25 @@
             {
               "$type": "Document",
               "DocumentIndex": 3,
+              "Title": "Customer.cs",
+              "DocumentMoniker": "C:\\Users\\jerea\\Documents\\GitHub\\Kettera-Ohjelmistokehitysprojekti\\Kettera_console\\Kettera_console\\Customer.cs",
+              "RelativeDocumentMoniker": "Kettera_console\\Customer.cs",
+              "ToolTip": "C:\\Users\\jerea\\Documents\\GitHub\\Kettera-Ohjelmistokehitysprojekti\\Kettera_console\\Kettera_console\\Customer.cs",
+              "RelativeToolTip": "Kettera_console\\Customer.cs",
+              "ViewState": "AQIAADcAAAAAAAAAAAAcwD0AAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-25T08:13:53.577Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\jerea\\Documents\\GitHub\\Kettera-Ohjelmistokehitysprojekti\\Kettera_console\\Kettera_console\\Program.cs",
               "RelativeDocumentMoniker": "Kettera_console\\Program.cs",
               "ToolTip": "C:\\Users\\jerea\\Documents\\GitHub\\Kettera-Ohjelmistokehitysprojekti\\Kettera_console\\Kettera_console\\Program.cs",
               "RelativeToolTip": "Kettera_console\\Program.cs",
-              "ViewState": "AQIAADAAAAAAAAAAAAAAADUAAAAuAAAA",
+              "ViewState": "AQIAAAgAAAAAAAAAAAAqwBoAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-20T09:43:53.11Z",
               "EditorCaption": ""
