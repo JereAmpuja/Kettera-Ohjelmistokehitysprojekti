@@ -20,7 +20,7 @@ namespace Kettera_console
         static void Main(string[] args)
         {
             UI ui = UI.Instance;
-            
+            ui.Run();
         }      
     }
 }

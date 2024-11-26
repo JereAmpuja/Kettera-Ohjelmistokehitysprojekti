@@ -175,7 +175,23 @@ namespace Kettera_console
                 }
             }
             return null;
+        }
 
+        private GroupClass GetGroupClassByID(int groupClassID)
+        {
+            groupClasses = db.GetGroupClasses();
+            for (int i = 0; i < groupClasses.Count; i++)
+            {
+                if (groupClasses[i].ID == groupClassID)
+                {
+                    return groupClasses[i];
+                }
+                else if (i == groupClasses.Count - 1)
+                {
+                    Console.WriteLine("\nRyhmäliikuntatuntia ei löytynyt.");
+                }
+            }
+            return null;
         }
         //Tulostaa kaikki ryhmäliikuntatunnit.
         public void PrintAllCustomers()
@@ -237,11 +253,52 @@ namespace Kettera_console
 
             Console.WriteLine("\nRyhmäliikuntatunti lisätty tietokantaan onnistuneesti.");
         }
+        //Lisää valmentajan tietokantaan.
+        public void AddTrainer()
+        {                 
+            Console.Write("Valmentajan nimi: ");
+            string name = Console.ReadLine();
+
+            string[] fields = { "trainer_name" };
+            string[] values = { name };
+        
+            db.ExecuteInsertInto("trainer", fields, values);
+        
+            Console.WriteLine("\nValmentaja lisätty tietokantaan onnistuneesti!");
+        }
+        //Poistaa valmentajan tietokannasta.
+        public void DeleteTrainer()
+        {
+            Console.WriteLine("Valitse valmentaja jonka haluat poistaa.\n");
+            trainer = RequestTrainer();
+
+            string keyfield = "trainer_id";
+            string keyValue = trainer.ID.ToString();
+
+            db.ExecuteDelete("trainer", keyfield, keyValue);
+
+            Console.WriteLine("\nValmentaja poistettu onnistuneesti.");
+        }
+        //Muokkaa Valmentajan tietoja. (Vain nimi..)
+        public void EditTrainer()
+        {
+            Console.WriteLine("Valitse valmentaja jonka tietoja haluat muokata.\n");
+            trainer = RequestTrainer();
+            Console.Write("\nSyötä uusi nimi: ");
+            string name = Console.ReadLine();
+
+            string[] fields = { "trainer_name" };
+            string[] values = { name };
+            string keyfield = "trainer_id";
+            string keyValue = trainer.ID.ToString();
+
+            db.ExecuteUpdate("trainer", fields, values, keyfield, keyValue);
+
+            Console.WriteLine("\nMuutokset tallennettu onnistuneesti.");
+        }
 
         public void AddCustomer()
         {
-            Console.Clear();
-
             Console.Write("Asiakkaan nimi muodossa ETUNIMI SUKUNIMI: ");
             string name = Console.ReadLine();
             Console.Write("\nSyntymäpäivä muodossa PP.KK.VVVV: ");
@@ -250,7 +307,7 @@ namespace Kettera_console
             DateTime membershipEndDay = Convert.ToDateTime(Console.ReadLine());
             Console.WriteLine();
             //Kysytään valmentaja metodia käyttäen.
-            Console.WriteLine("\nMääritä valmentaja. Saatavilla olevat valmentajat:\n");
+            Console.WriteLine("Määritä valmentaja. Saatavilla olevat valmentajat:\n");
             trainer = RequestTrainer();
             int personalTrainerID = trainer.ID;
             Console.Write("\nRyhmä ja valmentaja käynnit: ");
@@ -277,6 +334,114 @@ namespace Kettera_console
             Console.WriteLine("\nAsiakas poistettu onnistuneesti.");
         }
 
+        public void PrintCustomerByNameID()
+        {
+            customers = db.GetAllCustomers();
+
+            for (int i = 0; i < customers.Count; i++)
+            {
+                Console.WriteLine($"{customers[i].ID + ":"} {customers[i].Name}");
+            }
+            Console.Write("\nSyötä asiakkaan ID tai Nimi: ");
+
+            string response = Console.ReadLine();
+            for (int i = 0; i < customers.Count; i++)
+            {
+                if (customers[i].ID.ToString() == response)
+                {
+                    Console.WriteLine();
+                    customers[i].ToString();
+                }
+                else if (customers[i].Name == response)
+                {
+                    Console.WriteLine();
+                    customers[i].ToString();
+                }
+                else if (i == customers.Count - 1)
+                {
+                    Console.WriteLine("\nAsiakasta ei löytynyt.");
+                }
+            }
+        }
+
+        public void EditCustomer()
+        {
+            Console.WriteLine("Valitse asiakas jonka tietoja haluat muokata.\n");
+            customer = RequestCustomer();
+            bool run = true;
+            while (run)
+            {
+                Console.Clear();
+                Console.WriteLine(customer.ToString());
+                Console.WriteLine("\nValitse muokattava tieto:\n");
+                Console.WriteLine("1: Nimi\n2: Syntymäpäivä\n3: Valmentaja\n4: Jäsenyyden päättymispäivä\n0: Poistu\n");
+                Console.WriteLine("Syötä valinta: ");
+                int value = Convert.ToInt16(Console.ReadLine());
+
+                switch (value)
+                {
+                    case 1:
+                        Console.Clear();
+                        Console.WriteLine("Nykyinen arvo: " + customer.Name);
+                        Console.WriteLine("Syötä uusi nimi muodossa ETUNIMI SUKUNIMI: ");
+                        customer.Name = Console.ReadLine();
+                        break;
+                    case 2:
+                        Console.Clear();
+                        Console.WriteLine("Nykyinen arvo: " + customer.BirthDay.ToString("dd-MM-yyyy"));
+                        Console.Write("Syötä uusi syntymäpäivä muodossa PP.KK.VVVV: ");
+                        customer.BirthDay = Convert.ToDateTime(Console.ReadLine());
+                        break;
+                    case 3:
+                        Console.Clear();
+                        Console.WriteLine("Nykyinen arvo: " + customer.PersonalTrainerID + ". " + customer.PersonalTrainerName);
+                        Console.WriteLine("Määritä uusi valmentaja. Saatavilla olevat valmentajat:\n");
+                        trainer = RequestTrainer();
+                        customer.PersonalTrainerID = trainer.ID;
+                        customer.PersonalTrainerName = trainer.Name;
+                        break;
+                    case 4:
+                        Console.Clear();
+                        Console.WriteLine("Nykyinen arvo: " + customer.MembershipEndDay);
+                        Console.WriteLine("Syötä uusi jäsenyyden päättymispäivä muodossa PP.KK.VVVV: ");
+                        customer.MembershipEndDay = Convert.ToDateTime(Console.ReadLine());
+                        break;
+                    case 0:
+                        return;
+                }
+            }
+            Console.Clear();
+            Console.WriteLine(customer.ToString());
+            Console.Write("\nHaluatko tallentaa muutokset? K/E: ");
+            string response = Console.ReadLine();
+            if (response == "K" || response == "k")
+            {
+                string[] fields = { "customer_name", "birthday", "trainer_ref", "gym_visits", "group_pt_visits", "membership_end" };
+                string[] values = { customer.Name, customer.BirthDay.ToString("yyyy-MM-dd"), customer.PersonalTrainerID.ToString(), customer.GymVisits.ToString(), customer.GroupVisits.ToString(), customer.MembershipEndDay.ToString("yyyy-MM-dd") };
+                string keyfield = "customer_id";
+                string keyValue = customer.ID.ToString();
+
+                db.ExecuteUpdate("customer", fields, values, keyfield, keyValue);
+                Console.WriteLine("\nMuutokset tallennettu onnistuneesti.");
+            }
+            else
+            {
+                Console.WriteLine("\nMuutokset hylätty.");
+            }
+        }
+
+        public void AddGroupPtVisits()
+        {
+            Console.Clear();
+            Console.WriteLine("Valitse asiakas jolle haluat lisätä ryhmäliikunta/pt käynnin.\n");
+            customer = RequestCustomer();
+
+            Console.Write("\nKuinka monta käyntiä haluat lisätä: ");
+            int value = Convert.ToInt16(Console.ReadLine());
+
+            IncreaseDecreaseGroupPtVisits(customer.ID, value, 1);
+            Console.WriteLine("\nKäynnit lisätty onnistuneesti. Uusi määrä: " + customer.GroupVisits);
+        }
         public void AssignNewPersonalTrainer()
         {
             Console.Clear();
@@ -326,14 +491,20 @@ namespace Kettera_console
             Console.WriteLine("\nValitse ryhmäliikuntatunti jolle haluat lisätä asiakkaan.\n");
             groupClass = RequestGroupClass(); //Kutsutaan metodia joka palauttaa valitun ryhmäliikuntatunnin oliona.
 
+            if (groupClass.VisitorCount == groupClass.VisitorLimit)
+            {
+                Console.WriteLine("Ryhmäliikuntatunnilla ei ole enää tilaa.");
+                return;
+            }
+
             string[] fields = { "customer_ref", "class_ref" };
             string[] values = { customer.ID.ToString(), groupClass.ID.ToString() };
 
             db.ExecuteInsertInto("group_class_reservation", fields, values);
 
             IncreaseDecreaseGroupPtVisits(customer.ID, 1, 1);
+            IncreaseDecreaseVisitorCount(groupClass.ID, 1, 1);
             Console.WriteLine("\nAsiakas lisätty ryhmäliikuntatunnille onnistuneesti. Jäljellä olevat ryhmäliikunta/pt kerrat: " + customer.GroupVisits);
-
         }
 
         //Metodi joka poistaa ryhmäliikuntatunnin. Kutsuu metodia joka poistaa varaukset.
@@ -369,7 +540,7 @@ namespace Kettera_console
         }
 
         //Metodi joka vähentää tai lisää asiakkaan ryhmäliikuntakertoja.
-        public void IncreaseDecreaseGroupPtVisits(int customerID, int increaseValue, int incrDecr)
+        private void IncreaseDecreaseGroupPtVisits(int customerID, int increaseValue, int incrDecr)
         {
             customer = db.GetCustomerByID(customerID.ToString()); //Haetaan asiakas tietokannasta.
             //Tarkistetaan onko kyseessä lisäys vai vähennys.
@@ -388,9 +559,9 @@ namespace Kettera_console
             db.ExecuteUpdate("customer", fields, values, "customer_id", customer.ID.ToString());
         }
 
-        public void IncreaseDecreaseGymVisits(int customerID, int increaseValue, int incrDecr)
+        //Lisää tai vähentää asiakkaan kuntosalikäyntejä yhteensä.
+        private void IncreaseDecreaseGymVisits(Customer c, int increaseValue, int incrDecr)
         {
-            customer = db.GetCustomerByID(customerID.ToString());
             if (incrDecr == 1)
             {
                 customer.GymVisits += increaseValue;
@@ -402,9 +573,34 @@ namespace Kettera_console
             string[] fields = { "gym_visits" };
             string[] values = { customer.GymVisits.ToString() };
 
-            db.ExecuteUpdate("customer", fields, values, "customer_id", customer.ID.ToString());
+            db.ExecuteUpdate("customer", fields, values, "customer_id", c.ID.ToString());
+        }
+        //Lisää tai vähentää ryhmäliikuntatunnin kävijämäärää.
+        private void IncreaseDecreaseVisitorCount(int groupClassID, int increaseValue, int incrDecr)
+        {
+            groupClass = GetGroupClassByID(groupClassID);
+            if (incrDecr == 1)
+            {
+                groupClass.VisitorCount += increaseValue;
+            }
+            else if (incrDecr == 0)
+            {
+                groupClass.VisitorCount -= increaseValue;
+            }
+            string[] fields = { "visitor_count" };
+            string[] values = { groupClass.VisitorCount.ToString() };
+
+            db.ExecuteUpdate("group_class", fields, values, "class_id", groupClass.ID.ToString());
         }
 
+        public void IncreaseGymVisitsByOne()
+        {
+            Console.WriteLine("Valitse asiakas jolle haluat lisätä kuntosalikäynnin.\n");
+            customer = RequestCustomer();
+
+            IncreaseDecreaseGymVisits(customer, 1, 1);
+            Console.WriteLine("\nKäynti lisätty onnistuneesti. Asiakkaan: " + customer.Name + " sali käynnit yhteensä: " + customer.GymVisits);
+        }
 
     }
 }
