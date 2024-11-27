@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -369,13 +370,14 @@ namespace Kettera_console
             Console.WriteLine("Valitse asiakas jonka tietoja haluat muokata.\n");
             customer = RequestCustomer();
             bool run = true;
+            int counter = 0;
             while (run)
             {
                 Console.Clear();
                 Console.WriteLine(customer.ToString());
                 Console.WriteLine("\nValitse muokattava tieto:\n");
                 Console.WriteLine("1: Nimi\n2: Syntymäpäivä\n3: Valmentaja\n4: Jäsenyyden päättymispäivä\n0: Poistu\n");
-                Console.WriteLine("Syötä valinta: ");
+                Console.Write("Syötä valinta: ");
                 int value = Convert.ToInt16(Console.ReadLine());
 
                 switch (value)
@@ -385,12 +387,14 @@ namespace Kettera_console
                         Console.WriteLine("Nykyinen arvo: " + customer.Name);
                         Console.WriteLine("Syötä uusi nimi muodossa ETUNIMI SUKUNIMI: ");
                         customer.Name = Console.ReadLine();
+                        counter++;
                         break;
                     case 2:
                         Console.Clear();
                         Console.WriteLine("Nykyinen arvo: " + customer.BirthDay.ToString("dd-MM-yyyy"));
                         Console.Write("Syötä uusi syntymäpäivä muodossa PP.KK.VVVV: ");
                         customer.BirthDay = Convert.ToDateTime(Console.ReadLine());
+                        counter++;
                         break;
                     case 3:
                         Console.Clear();
@@ -399,15 +403,26 @@ namespace Kettera_console
                         trainer = RequestTrainer();
                         customer.PersonalTrainerID = trainer.ID;
                         customer.PersonalTrainerName = trainer.Name;
+                        counter++;
                         break;
                     case 4:
                         Console.Clear();
                         Console.WriteLine("Nykyinen arvo: " + customer.MembershipEndDay);
                         Console.WriteLine("Syötä uusi jäsenyyden päättymispäivä muodossa PP.KK.VVVV: ");
                         customer.MembershipEndDay = Convert.ToDateTime(Console.ReadLine());
+                        counter++;
                         break;
                     case 0:
-                        return;
+                        if (counter == 0)
+                        {
+                            return;
+                        }
+                        else if (counter > 0)
+                        {
+                            run = false;
+                            break;
+                        }
+                        break;
                 }
             }
             Console.Clear();
@@ -417,11 +432,12 @@ namespace Kettera_console
             if (response == "K" || response == "k")
             {
                 string[] fields = { "customer_name", "birthday", "trainer_ref", "gym_visits", "group_pt_visits", "membership_end" };
-                string[] values = { customer.Name, customer.BirthDay.ToString("yyyy-MM-dd"), customer.PersonalTrainerID.ToString(), customer.GymVisits.ToString(), customer.GroupVisits.ToString(), customer.MembershipEndDay.ToString("yyyy-MM-dd") };
+                string[] values = { customer.Name.ToString(), customer.BirthDay.ToString("yyyy-MM-dd"), customer.PersonalTrainerID.ToString(), customer.GymVisits.ToString(), customer.GroupVisits.ToString(), customer.MembershipEndDay.ToString("yyyy-MM-dd") };
                 string keyfield = "customer_id";
                 string keyValue = customer.ID.ToString();
 
                 db.ExecuteUpdate("customer", fields, values, keyfield, keyValue);
+                Console.Clear();
                 Console.WriteLine("\nMuutokset tallennettu onnistuneesti.");
             }
             else

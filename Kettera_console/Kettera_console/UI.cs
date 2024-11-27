@@ -132,6 +132,7 @@ namespace Kettera_console
                     case '4':
                         Console.Clear();
                         gm.EditCustomer();
+                        ContinuePrompt();
                         break;
                     case '5':
                         Console.Clear();

@@ -133,7 +133,7 @@ namespace Kettera_console
             query += table + " SET ";
             for (int i = 0; i < fields.Length; i++)
             {
-                query += fields[i] + " = " + values[i] ;
+                query += fields[i] + " = " + "'" + values[i] + "'";
                 if (i < fields.Length - 1)
                 {
                     query += ", ";
