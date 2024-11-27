@@ -254,6 +254,91 @@ namespace Kettera_console
 
             Console.WriteLine("\nRyhmäliikuntatunti lisätty tietokantaan onnistuneesti.");
         }
+        //Muokkaa ryhmäliikuntatuntia.
+        public void EditGroupClass()
+        {
+            Console.WriteLine("Muokattavissa olevat ryhmäliikuntatunnit:\n");
+            groupClass = RequestGroupClass();
+            bool run = true;
+            int counter = 0;
+            while (run)
+            {
+                Console.Clear();
+                Console.WriteLine(groupClass.ToString());
+                Console.WriteLine("\nValitse muokattava tieto:\n");
+                Console.WriteLine("1: Valmentaja\n2: Päivämäärä ja aika\n3: Kävijäraja\n0: Poistu\n");
+                Console.Write("Syötä valinta: ");
+                int value = Convert.ToInt16(Console.ReadLine());
+
+                switch (value)
+                {
+                    case 1:
+                        Console.Clear();
+                        Console.WriteLine("Nykyinen arvo: " + groupClass.TrainerID + ". " + groupClass.TrainerName);
+                        Console.WriteLine("Määritä uusi valmentaja. Saatavilla olevat valmentajat:\n");
+                        trainer = RequestTrainer();
+                        groupClass.TrainerID = trainer.ID;
+                        groupClass.TrainerName = trainer.Name;
+                        counter++;
+                        break;
+                    case 2:
+                        Console.Clear();
+                        Console.WriteLine("Nykyinen arvo: " + groupClass.DateAndTime.ToString("dd-MM-yyyy HH:mm"));
+                        Console.Write("Syötä uusi päivämäärä ja aika muodossa PP.KK.VVVV HH:MM: ");
+                        groupClass.DateAndTime = Convert.ToDateTime(Console.ReadLine());
+                        counter++;
+                        break;
+                    case 3:
+                        Console.Clear();
+                        Console.WriteLine("Nykyinen arvo: " + groupClass.VisitorLimit);
+                        Console.Write("Syötä uusi kävijäraja: ");
+                        int newValue = Convert.ToInt16(Console.ReadLine());
+                        if (newValue >= groupClass.VisitorCount)
+                        {
+                            groupClass.VisitorLimit = newValue;
+                        }
+                        else if (newValue < groupClass.VisitorCount)
+                        {
+                            Console.WriteLine("Kävijäraja ei voi olla pienempi kuin nykyinen kävijämäärä.");
+                            break;
+                        }
+                        counter++;
+                        break;
+                    case 0:
+                        if (counter == 0)
+                        {
+                            return;
+                        }
+                        else if (counter > 0)
+                        {
+                            run = false;
+                            break;
+                        }
+                        break;
+                }
+                Console.Clear();
+                Console.WriteLine(groupClass.ToString());
+
+                Console.Write("\nHaluatko tallentaa muutokset? K/E: ");
+                string response = Console.ReadLine();
+                if (response == "K" || response == "k")
+                {
+                    string[] fields = { "trainer_ref", "dateandtime", "visitor_limit", "visitor_count" };
+                    string[] values = { groupClass.TrainerID.ToString(), groupClass.DateAndTime.ToString("yyyy-MM-dd HH:mm"), groupClass.VisitorLimit.ToString(), groupClass.VisitorCount.ToString() };
+                    string keyfield = "class_id";
+                    string keyValue = groupClass.ID.ToString();
+
+                    db.ExecuteUpdate("group_class", fields, values, keyfield, keyValue);
+                    Console.Clear();
+                    Console.WriteLine("\nMuutokset tallennettu onnistuneesti.");
+                }
+                else
+                {
+                    Console.WriteLine("\nMuutokset hylätty.");
+                }
+            }
+        }
+
         //Lisää valmentajan tietokantaan.
         public void AddTrainer()
         {                 

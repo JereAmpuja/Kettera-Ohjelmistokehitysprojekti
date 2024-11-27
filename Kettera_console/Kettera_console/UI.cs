@@ -149,7 +149,7 @@ namespace Kettera_console
             }
         }
 
-        private char TrainerMenu()
+        private void TrainerMenu()
         {
             while (true)
             {
@@ -167,20 +167,25 @@ namespace Kettera_console
                     case '1':
                         Console.Clear();
                         gm.AddTrainer();
+                        ContinuePrompt();
                         break;
                     case '2':
                         Console.Clear();
                         gm.DeleteTrainer();
+                        ContinuePrompt();
                         break;
                     case '3':
                         Console.Clear();
                         gm.PrintAllTrainers();
+                        ContinuePrompt();
                         break;
                     case '4':
-                        
+                        Console.Clear();
+                        gm.EditTrainer();
+                        ContinuePrompt();
                         break;
                     case '0':
-                        return '0';
+                        return;
                     default:
                         Console.WriteLine("\nVirheellinen syöte.");
                         ContinuePrompt();
@@ -189,7 +194,7 @@ namespace Kettera_console
             }
         }
 
-        private char GroupClassMenu()
+        private void GroupClassMenu()
         { 
             while(true) 
             { 
@@ -206,21 +211,25 @@ namespace Kettera_console
                     case '1':
                         Console.Clear();
                         gm.AddGroupClass();
+                        ContinuePrompt();
                         break;
                     case '2':
                         Console.Clear();
                         gm.DeleteGroupClass();
+                        ContinuePrompt();
                         break;
                     case '3':
                         Console.Clear();
                         gm.PrintAllGroupClasses();
-                    break;
+                        ContinuePrompt();
+                        break;
                         case '4':
                         Console.Clear();
-                        
+                        gm.EditGroupClass();
+                        ContinuePrompt();                   
                         break;
                     case '0':
-                        return '0';
+                        return;
                     default:
                         Console.WriteLine("\nVirheellinen syöte.");
                         ContinuePrompt();
@@ -229,6 +238,49 @@ namespace Kettera_console
 
                 }
             
+            }
+        }
+        private void ReservationMenu()
+        {
+            while(true)
+            {
+                string text;    
+                text = "1: Lisää asiakas ryhmäliikuntatunnille.\n";
+                text += "2: Poista asiakas ryhmäliikuntatunnilta.\n";
+                text += "3: Näytä varaukset.\n";
+                text += "4: Muokkaa varausta.\n";
+                text += "0: Palaa päävalikkoon.\n";
+                Console.WriteLine(text);
+                char value = Console.ReadKey().KeyChar;
+                switch (value)
+                {
+                    case '1':
+                        Console.Clear();
+                        gm.AddReservation();
+                        ContinuePrompt();
+                        break;
+                    case '2':
+                        Console.Clear();
+                        gm.DeleteReservation();
+                        ContinuePrompt();
+                        break;
+                    case '3':
+                        Console.Clear();
+                        gm.PrintAllReservations();
+                        ContinuePrompt();
+                        break;
+                    case '4':
+                        Console.Clear();
+                        gm.EditReservation();
+                        ContinuePrompt();
+                        break;
+                    case '0':
+                        return;
+                    default:
+                        Console.WriteLine("\nVirheellinen syöte.");
+                        ContinuePrompt();
+                        break;
+                }
             }
         }
     }   
