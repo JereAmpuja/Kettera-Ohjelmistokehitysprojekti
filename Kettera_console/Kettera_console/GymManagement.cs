@@ -24,7 +24,7 @@ namespace Kettera_console
             db = new DbConnection();
         }
 
-        public void PrintCalendarEventsByDate()
+        public void PrintGcCalendarEventsByDate()
         {
             Console.Clear();
             Console.Write("Syötä päivämäärä muodossa PP.KK.VVVV: ");
@@ -42,13 +42,13 @@ namespace Kettera_console
             }
         }
 
-        public void PrintCalendarEventsByCustomer()
+        public Customer PrintGcCalendarEventsByCustomer()
         {
             customer = RequestCustomer();
 
             calendarEvents = db.GetAllCalendarEvents();
 
-            Console.WriteLine("Varaukset asiakkaalle:\n");
+            Console.WriteLine("Varaukset asiakkaalle " + customer.Name + ":\n");
             for (int i = 0; i < calendarEvents.Count; i++)
             {
                 if (calendarEvents[i].customerID == customer.ID)
@@ -56,9 +56,10 @@ namespace Kettera_console
                     Console.WriteLine(calendarEvents[i].ToString());
                 }
             }
+            return customer;
         }
 
-        public void PrintCalendarEventsByTrainer()
+        public void PrintGcCalendarEventsByTrainer()
         {
             Console.Clear();
             Console.WriteLine("Valitse valmentaja jonka varaukset haluat nähdä.\n");
@@ -75,7 +76,7 @@ namespace Kettera_console
                 }
             }
         }
-        public void PrintCalendarEventsByGroupClass()
+        public void PrintGcCalendarEventsByGroupClass()
         {
             Console.Clear();
             Console.WriteLine("Valitse ryhmäliikuntatunti jonka varaukset haluat nähdä.\n");
@@ -93,7 +94,7 @@ namespace Kettera_console
             }
         }
 
-        public void RequestCalendarEventPrint()
+        public void RequestGcCalendarEventPrint()
         {
 
         }
@@ -160,7 +161,10 @@ namespace Kettera_console
         //Metodi joka tulostaa ryhmäliikuntatunnit ja palauttaa valitun ryhmäliikuntatunnin oliona. Tarkistaa myös että arvo löytyy.
         public GroupClass RequestGroupClass()
         {
-            PrintAllGroupClasses();
+            if (!PrintOnlyUpComingGc())
+            {
+                return null;
+            }
             Console.Write("\nSyötä ryhmäliikuntatunnin ID: ");
 
             int groupClassID = Convert.ToInt16(Console.ReadLine());
@@ -218,17 +222,50 @@ namespace Kettera_console
         public void PrintAllGroupClasses()
         {
             groupClasses = db.GetGroupClasses();
-
+            if (groupClasses.Count < 1)
+            {
+                Console.WriteLine("Ei ryhmäliikuntatunteja.");
+                return;
+            }
             Console.WriteLine("Ryhmäliikuntatunnit:");
             for (int i = 0; i < groupClasses.Count; i++)
             {
                 Console.WriteLine(groupClasses[i].ToString());
             }
         }
+
+        //Tulostaa vain ryhmäliikunta tunnin
+        public bool PrintOnlyUpComingGc()
+        {
+            List<GroupClass> tempGcs = db.GetGroupClasses();
+            if (tempGcs.Count < 1)
+            {
+                Console.WriteLine("Ei ryhmäliikuntatunteja.");
+                return false;
+            }
+            groupClasses = new List<GroupClass>();
+            for (int i = 0; i < tempGcs.Count; i++)
+            {
+                if (tempGcs[i].DateAndTime > DateTime.Now)
+                    groupClasses.Add(tempGcs[i]);
+            }
+            for (int i = 0; i < groupClasses.Count; i++)
+            {
+                Console.WriteLine(groupClasses[i].ToString());
+            }
+            return true;
+        }
+
         //Tulostaa kaikki varaukset.
-        public void PrintAllCalendarEvents()
+        public void PrintAllGcCalendarEvents()
         {
             calendarEvents = db.GetAllCalendarEvents();
+
+            if (calendarEvents.Count < 1)
+            {
+                Console.WriteLine("Ei varauksia.");
+                return;
+            }
 
             Console.WriteLine("Varaukset:\n");
             for (int i = 0; i < calendarEvents.Count; i++)
@@ -242,8 +279,15 @@ namespace Kettera_console
         {
             Console.WriteLine("Määritä valmentaja. Saatavilla olevat valmentajat:");
             trainer = RequestTrainer();
+            if (trainer == null)
+                return;
             Console.Write("\nSyötä päivämäärä ja aika muodossa PP.KK.VVVV HH:MM: ");
             DateTime date = Convert.ToDateTime(Console.ReadLine());
+            if (date < DateTime.Now)
+            {
+                Console.WriteLine("Ryhmäliikuntatunnin aika ei voi olla pienempi kuin tämä päivä.");
+                return;
+            }
             Console.Write("\nSyötä kävijäraja: ");
             int visitorLimit = Convert.ToInt16(Console.ReadLine());
 
@@ -259,6 +303,8 @@ namespace Kettera_console
         {
             Console.WriteLine("Muokattavissa olevat ryhmäliikuntatunnit:\n");
             groupClass = RequestGroupClass();
+            if (groupClass == null)
+                return;
             bool run = true;
             int counter = 0;
             while (run)
@@ -286,6 +332,11 @@ namespace Kettera_console
                         Console.WriteLine("Nykyinen arvo: " + groupClass.DateAndTime.ToString("dd-MM-yyyy HH:mm"));
                         Console.Write("Syötä uusi päivämäärä ja aika muodossa PP.KK.VVVV HH:MM: ");
                         groupClass.DateAndTime = Convert.ToDateTime(Console.ReadLine());
+                        if (groupClass.DateAndTime < DateTime.Now)
+                        {
+                            Console.WriteLine("Päivämäärä ei voi olla pienempi kuin tämä päivä.");
+                            return;
+                        }
                         counter++;
                         break;
                     case 3:
@@ -454,6 +505,8 @@ namespace Kettera_console
         {
             Console.WriteLine("Valitse asiakas jonka tietoja haluat muokata.\n");
             customer = RequestCustomer();
+            if (customer == null)
+                return;
             bool run = true;
             int counter = 0;
             while (run)
@@ -536,12 +589,15 @@ namespace Kettera_console
             Console.Clear();
             Console.WriteLine("Valitse asiakas jolle haluat lisätä ryhmäliikunta/pt käynnin.\n");
             customer = RequestCustomer();
+            if (customer != null)
+            {
+                int ID = customer.ID;
+                Console.Write("\nKuinka monta käyntiä haluat lisätä: ");
+                int value = Convert.ToInt16(Console.ReadLine());
 
-            Console.Write("\nKuinka monta käyntiä haluat lisätä: ");
-            int value = Convert.ToInt16(Console.ReadLine());
-
-            IncreaseDecreaseGroupPtVisits(customer.ID, value, 1);
-            Console.WriteLine("\nKäynnit lisätty onnistuneesti. Uusi määrä: " + customer.GroupVisits);
+                IncreaseDecreaseGroupPtVisits(ID, value, 1);
+                Console.WriteLine("\nKäynnit lisätty onnistuneesti. Uusi määrä: " + customer.GroupVisits);
+            }        
         }
         public void AssignNewPersonalTrainer()
         {
@@ -591,7 +647,8 @@ namespace Kettera_console
             }
             Console.WriteLine("\nValitse ryhmäliikuntatunti jolle haluat lisätä asiakkaan.\n");
             groupClass = RequestGroupClass(); //Kutsutaan metodia joka palauttaa valitun ryhmäliikuntatunnin oliona.
-
+            if (groupClass == null)
+                return;
             if (groupClass.VisitorCount == groupClass.VisitorLimit)
             {
                 Console.WriteLine("Ryhmäliikuntatunnilla ei ole enää tilaa.");
@@ -603,9 +660,20 @@ namespace Kettera_console
 
             db.ExecuteInsertInto("group_class_reservation", fields, values);
 
-            IncreaseDecreaseGroupPtVisits(customer.ID, 1, 1);
+            IncreaseDecreaseGroupPtVisits(customer.ID, 1, 0);
             IncreaseDecreaseVisitorCount(groupClass.ID, 1, 1);
             Console.WriteLine("\nAsiakas lisätty ryhmäliikuntatunnille onnistuneesti. Jäljellä olevat ryhmäliikunta/pt kerrat: " + customer.GroupVisits);
+        }
+
+        //Metodi, jolla poistetaan asiakas ryhmäliikuntatunnilta
+        public void RemoveCustomerFromGroupClass()
+        {
+            Console.WriteLine("Valitse asiakas kenet haluat poistaa ryhmäliikuntatunnilta.");
+
+            customer = PrintGcCalendarEventsByCustomer();
+            Console.Write("Poistettavan varauksen ID: ");
+            int id = Convert.ToInt32(Console.ReadLine());
+            DeleteGroupClassReservationsByReservationID(id);
         }
 
         //Metodi joka poistaa ryhmäliikuntatunnin. Kutsuu metodia joka poistaa varaukset.
@@ -615,17 +683,20 @@ namespace Kettera_console
             Console.WriteLine("Valitse ryhmäliikuntatunti jonka haluat poistaa.\n");
             //Kutsutaan metodia joka palauttaa valitun ryhmäliikuntatunnin oliona.
             groupClass = RequestGroupClass(); 
+            if (groupClass == null)
+            {
+                return;
+            }
             //Poistetaan ryhmäliikuntatunti tietokannasta.
             string keyfield = "class_id";
             string keyValue = groupClass.ID.ToString();
-            db.ExecuteDelete("group_class", keyfield, keyValue);
             //Kutsutaan metodia joka poistaa kyseisen ryhmäliikuntatunnin varaukset.
-            DeleteGroupClassReservationsByID(Convert.ToInt16(keyValue));
-      
+            DeleteGroupClassReservationsByGcID(Convert.ToInt16(keyValue));
+            db.ExecuteDelete("group_class", keyfield, keyValue);
             Console.WriteLine("\nRyhmäliikuntatunti poistettu onnistuneesti.");
         }
         //Metodi, joka poistaa ryhmäliikuntatunnin varaukset ID:n perusteella. Kutsuu metodia joka lisää tai vähentää asiakkaan ryhmäliikuntakertoja.
-        public void DeleteGroupClassReservationsByID(int groupClassID)
+        private void DeleteGroupClassReservationsByGcID(int groupClassID)
         {
             calendarEvents = db.GetAllCalendarEvents(); //haetaan kaikki varaukset.
 
@@ -635,7 +706,23 @@ namespace Kettera_console
                 {
                     db.ExecuteDelete("group_class_reservation", "class_ref", groupClassID.ToString());
                     //Kutsutaan metodia joka lisää tai vähentää asiakkaan ryhmäliikuntakertoja.
-                    IncreaseDecreaseGroupPtVisits(calendarEvents[i].customerID, 1, 0);
+                    IncreaseDecreaseGroupPtVisits(calendarEvents[i].customerID, 1, 1);
+                }
+            }
+        }
+
+        private void DeleteGroupClassReservationsByReservationID(int reservationId) 
+        {
+            calendarEvents = db.GetAllCalendarEvents();
+
+            for (int i = 0;i < calendarEvents.Count ; i++) 
+            {
+                if (calendarEvents[i].ID == reservationId)
+                {
+                    db.ExecuteDelete("group_class_reservation", "reservation_id", reservationId.ToString());
+
+                    IncreaseDecreaseGroupPtVisits(calendarEvents[i].customerID, 1, 1);
+                    IncreaseDecreaseVisitorCount(calendarEvents[i].classID, 1, 0);
                 }
             }
         }
@@ -643,7 +730,8 @@ namespace Kettera_console
         //Metodi joka vähentää tai lisää asiakkaan ryhmäliikuntakertoja.
         private void IncreaseDecreaseGroupPtVisits(int customerID, int increaseValue, int incrDecr)
         {
-            customer = db.GetCustomerByID(customerID.ToString()); //Haetaan asiakas tietokannasta.
+            customer = db.GetCustomerByID(customerID);
+            //Haetaan asiakas tietokannasta.
             //Tarkistetaan onko kyseessä lisäys vai vähennys.
             if (incrDecr == 1) 
             {
@@ -657,7 +745,7 @@ namespace Kettera_console
             string[] values = { customer.GroupVisits.ToString() };
 
             //Päivitetään tieto tietokantaan.
-            db.ExecuteUpdate("customer", fields, values, "customer_id", customer.ID.ToString());
+            db.ExecuteUpdate("customer", fields, values, "customer_id", customerID.ToString());
         }
 
         //Lisää tai vähentää asiakkaan kuntosalikäyntejä yhteensä.
@@ -694,14 +782,126 @@ namespace Kettera_console
             db.ExecuteUpdate("group_class", fields, values, "class_id", groupClass.ID.ToString());
         }
 
-        public void IncreaseGymVisitsByOne()
+        public void MarkGymVisit()
         {
             Console.WriteLine("Valitse asiakas jolle haluat lisätä kuntosalikäynnin.\n");
             customer = RequestCustomer();
 
             IncreaseDecreaseGymVisits(customer, 1, 1);
             Console.WriteLine("\nKäynti lisätty onnistuneesti. Asiakkaan: " + customer.Name + " sali käynnit yhteensä: " + customer.GymVisits);
+            string[] fields = { "customer_ref", "dateandtime" };
+            string[] values = { customer.ID.ToString(), DateTime.Now.ToString() };
+            db.ExecuteInsertInto("gym_visit", fields, values);
         }
 
+        public void MarkGymVisitByID(int ID, DateTime time)
+        {             customer = db.GetCustomerByID(ID);
+                   IncreaseDecreaseGymVisits(customer, 1, 1);
+            Console.WriteLine("\nKäynti lisätty onnistuneesti. Asiakkaan: " + customer.Name + " sali käynnit yhteensä: " + customer);
+            string[] fields = { "customer_ref", "dateandtime" };
+            string[] values = { customer.ID.ToString(), time.ToString() };
+            db.ExecuteInsertInto("gym_visit", fields, values);
+        }
+
+        public void PrintAllGymVisits()
+        {
+            calendarEvents = db.GetAllGymVisits();
+            if (calendarEvents.Count < 1)
+            {
+                Console.WriteLine("Ei kuntosalikäyntejä.");
+                return;
+            }
+
+            Console.WriteLine("Kuntosalikäynnit:\n");
+            for (int i = 0; i < calendarEvents.Count; i++)
+            {
+                Console.WriteLine(calendarEvents[i].ToString());
+            }
+        }
+
+        public void PrintGymVisitsByCustID()
+        {
+            Console.WriteLine("Valitse asiakas jonka kuntosalikäynnit haluat nähdä.\n");
+            customer = RequestCustomer();
+            calendarEvents = db.GetGymVisitsByCustID(customer.ID);
+            if (calendarEvents.Count < 1)
+            {
+                Console.WriteLine("Ei kuntosalikäyntejä.");
+                return;
+            }
+            Console.Clear();
+            Console.WriteLine(customer.Name + "kuntosalikäynnit:\n");
+            for (int i = 0; i < calendarEvents.Count; i++)
+            {
+                Console.WriteLine(calendarEvents[i].ToString());
+            }
+        }
+
+        public void PrintGymVisitsFromTime( )
+        {
+            Console.Write("Syötä ensimmäinen päivämäärä muodossa PP.KK.VVVV: ");
+            DateTime date1 = Convert.ToDateTime(Console.ReadLine());
+            Console.Write("Syötä toinen päivämäärä muodossa PP.KK.VVVV: ");
+            DateTime date2 = Convert.ToDateTime(Console.ReadLine());
+            Console.Clear(); 
+            calendarEvents = db.GetGymVisitsFromTime(date1, date2);
+            if (calendarEvents.Count < 1)
+            {
+                Console.WriteLine("Ei kuntosalikäyntejä.");
+                return;
+            }
+            Console.WriteLine("Kuntosalikäynnit ajalta " + date1.ToString("dd.MM.yyyy") + " - " + date2.ToString("dd.MM.yyyy") + "\n");
+            for (int i = 0; i < calendarEvents.Count; i++)
+            {
+                Console.WriteLine(calendarEvents[i].ToString());
+            }
+        }
+
+        public void AddPtReservation()
+        {
+            Console.WriteLine("Valitse asiakas jolle haluat lisätä personal trainer käynnin.\n");
+            customer = RequestCustomer();
+            if (customer == null)
+            { return; }
+            Console.WriteLine("\nValitse PT käynnin valmentaja.\n");
+            trainer = RequestTrainer();
+            if (trainer == null)
+            { return; }
+            Console.Write("\nSyötä päivämäärä ja aika muodossa PP.KK.VVVV HH:MM: ");
+            DateTime date = Convert.ToDateTime(Console.ReadLine());
+            if (date < DateTime.Now)
+            {
+                Console.WriteLine("Personal trainer käynnin aika ei voi olla pienempi kuin tämä päivä.");
+                return;
+            }
+            string[] fields = { "customer_ref", "trainer_ref", "dateandtime" };
+            string[] values = { customer.ID.ToString(), trainer.ID.ToString(), date.ToString("yyyy-MM-dd HH:mm") };
+            Console.WriteLine("Personal trainer käynti lisätty onnistuneesti.");
+            db.ExecuteInsertInto("pt_reservation", fields, values);
+        }
+
+        public void RemovePtReservation()
+        {
+            PrintPtReservations();
+            Console.Write("Poistettavan varauksen ID: ");
+            int id = Convert.ToInt32(Console.ReadLine());
+            db.ExecuteDelete("pt_reservation", "reservation_id", id.ToString());
+            Console.WriteLine("Varaus poistettu onnistuneesti.");
+        }
+
+        public void PrintPtReservations()
+        {
+            calendarEvents = db.GetPtReservations();
+            if (calendarEvents.Count < 1)
+            {
+                Console.WriteLine("Ei personal trainer käyntejä.");
+                return;
+            }
+            Console.WriteLine("Personal trainer käynnit:\n");
+            for (int i = 0; i < calendarEvents.Count; i++)
+            {
+                Console.WriteLine(calendarEvents[i].PtVisitToString());
+            }
+        }
     }
 }

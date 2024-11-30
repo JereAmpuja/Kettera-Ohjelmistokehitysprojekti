@@ -61,14 +61,15 @@ namespace Kettera_console
                         break;
                     case '4':
                         Console.Clear();
+                            ReservationMenu();
                         break;
                     case '5':
                         Console.Clear();
+                            TrainerCalendarMenu();
                         break;
                     case '6':
                         Console.Clear();
-                        gm.IncreaseGymVisitsByOne(); //GymManagement luokan metodi.
-                        ContinuePrompt();
+                        GymVisitMenu();
                         break;
                     default:
                         Console.WriteLine("\nVirheellinen syöte.");
@@ -91,8 +92,8 @@ namespace Kettera_console
             text += "2: Hallitse valmentajia.\n";
             text += "3: Hallitse ryhmäliikuntatunteja.\n";
             text += "4: Hallitse varauksia.\n";
-            text += "5: Hallitse kalentereja.\n";
-            text += "6: Merkkaa salikäynti.\n";
+            text += "5: Hallitse valmentajien kalentereja.\n";
+            text += "6: Kuntosalikäynnit.\n";
             text += "\nValitse toiminto: ";
             Console.Write(text);
             return Console.ReadKey().KeyChar;
@@ -256,22 +257,22 @@ namespace Kettera_console
                 {
                     case '1':
                         Console.Clear();
-                        gm.AddReservation();
+                        gm.AddCustomerToGroupClass();
                         ContinuePrompt();
                         break;
                     case '2':
                         Console.Clear();
-                        gm.DeleteReservation();
+                        gm.RemoveCustomerFromGroupClass();
                         ContinuePrompt();
                         break;
                     case '3':
                         Console.Clear();
-                        gm.PrintAllReservations();
+                        gm.PrintAllGcCalendarEvents();
                         ContinuePrompt();
                         break;
                     case '4':
                         Console.Clear();
-                        gm.EditReservation();
+                        gm.PrintAllGcCalendarEvents();
                         ContinuePrompt();
                         break;
                     case '0':
@@ -282,6 +283,92 @@ namespace Kettera_console
                         break;
                 }
             }
+        }
+
+        public void TrainerCalendarMenu()
+        {
+            while(true)
+            {
+                string text;
+                text = "1: Lisää varaus.\n";
+                text += "2: Poista varaus.\n";
+                text += "3: Näytä valmentajan kalenteri.\n";
+                text += "4: Näytä kaikkien valmentajien kalenterit.\n";
+                text += "0: Palaa päävalikkoon.\n";
+                Console.WriteLine(text);
+                char value = Console.ReadKey().KeyChar;
+                switch (value)
+                {
+                    case '1':
+                        Console.Clear();
+                        gm.AddPtReservation();
+                        ContinuePrompt();
+                        break;
+                    case '2':
+                        Console.Clear();
+                        gm.RemovePtReservation();
+                        ContinuePrompt();
+                        break;
+                    case '3':
+                        Console.Clear();
+                        
+                        ContinuePrompt();
+                        break;
+                    case '4':
+                        Console.Clear();
+                        
+                        ContinuePrompt();
+                        break;
+                    case '0':
+                        return;
+                    default:
+                        Console.WriteLine("\nVirheellinen syöte.");
+                        ContinuePrompt();
+                        break;
+                }
+            }
+        }
+
+        public void GymVisitMenu()
+        {
+            while(true)
+            {
+                Console.WriteLine("Kuntosalikäynnit.\n");
+                Console.WriteLine("1: Lisää kuntosalikäynti asiakkaalle\n2: Kaikki kuntosalikäynnit\n3: Asiakkaan kuntosalikäynnit\n4: Kuntosalikäynnit aikavälillä\n0: Poistu\n");
+                Console.Write("Syötä valinta: ");
+                char value = Console.ReadKey().KeyChar;
+
+                switch (value)
+                {
+                    case '1':
+                        Console.Clear();
+                        gm.MarkGymVisit();
+                        ContinuePrompt();
+                        break;
+                    case '2':
+                        Console.Clear();
+                        gm.PrintAllGymVisits();
+                        ContinuePrompt();
+                        break;
+                    case '3':
+                        Console.Clear();
+                        gm.PrintGymVisitsByCustID();
+                        ContinuePrompt();
+                        break;
+                    case '4':
+                        Console.Clear();
+                        gm.PrintGymVisitsFromTime();
+                        ContinuePrompt();
+                        break;
+                    case '0':
+                        return;
+                    default:
+                        Console.WriteLine("\nVirheellinen syöte.");
+                        ContinuePrompt();
+                        break;
+                }
+            }
+            
         }
     }   
 }

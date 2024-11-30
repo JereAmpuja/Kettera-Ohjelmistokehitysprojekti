@@ -62,7 +62,7 @@ namespace Kettera_console
 
             myCommand.CommandType = CommandType.Text; //Määritetään kyselyn tyyppi (teksti).
 
-            //Console.WriteLine(myCommand.CommandText); //Tulostaa kyselyn konsoliin.
+            Console.WriteLine(myCommand.CommandText); //Tulostaa kyselyn konsoliin.
             OleDbDataReader myReader;
             myReader = myCommand.ExecuteReader(); //Suorittaa kyselyn ja palauttaa lukijan.
 
@@ -88,18 +88,17 @@ namespace Kettera_console
             }
             myCommand.CommandText += " FROM " + table;
 
-            myCommand.CommandText += " WHERE " + keyField + "='" + keyValue + "';"; //Lisätään where ehto sekä parametrina tulleet arvot kyselyyn!
+            myCommand.CommandText += " WHERE " + keyField + " = " + keyValue + ";"; //Lisätään where ehto sekä parametrina tulleet arvot kyselyyn!
 
             myCommand.CommandType = CommandType.Text;
 
             OleDbDataReader myReader;
             myReader = myCommand.ExecuteReader();
-
             return myReader;
         }
 
         //Haetaan tiettyä tietoa, missä arvo on joltain väliltä (esim. päivämäärät).
-        private OleDbDataReader GetDataWhereBetween(string[] fields, string table, string keyField, double minValue, double maxValue)
+        private OleDbDataReader GetDataWhereBetween(string[] fields, string table, string keyField, string minValue, string maxValue, int x)
         {
             OleDbCommand myCommand = new OleDbCommand();
 
@@ -117,13 +116,21 @@ namespace Kettera_console
             }
             myCommand.CommandText += " FROM " + table;
 
-            myCommand.CommandText += " WHERE " + keyField + " BETWEEN " + minValue + " AND " + maxValue + ";"; //Lisätään where ehto sekä parametrina tulleet arvot kyselyyn.
+            myCommand.CommandText += " WHERE " + keyField + " BETWEEN #" + minValue + "# AND #" + maxValue + "#"; //Lisätään where ehto sekä parametrina tulleet arvot kyselyyn.
+            
+            if (x == 0)
+            {
+                myCommand.CommandText += ";";
+            }
 
+            else if (x == 1)
+            {
+                myCommand.CommandText += " ORDER BY dateandtime ASC;";
+            }
             myCommand.CommandType = CommandType.Text;
 
             OleDbDataReader myReader;
             myReader = myCommand.ExecuteReader();
-
             return myReader;
         }
 
@@ -226,16 +233,16 @@ namespace Kettera_console
             myCommand.ExecuteNonQuery();
         }
 
-        public Customer GetCustomerByID(string custID)
+        public Customer GetCustomerByID(int custID)
         {
             Customer newC = null;
             string[] fields = { "c.*, t.trainer_name" };
-            string table = "customer c LEFT JOIN trainer ON t.trainer_id = c.trainer_ref";
+            string table = "customer c LEFT JOIN trainer t ON t.trainer_id = c.trainer_ref";
 
             OleDbDataReader myReader;
-            myReader = GetDataWhere(fields, table, "customer_id", custID);
+            myReader = GetDataWhere(fields, table, "customer_id", custID.ToString());
 
-            //Tarkistaa onko tietoja luettavana.
+            //Tarkistaa onko tietoja luettavana.    
             bool notEoF;
 
             notEoF = myReader.Read();
@@ -412,6 +419,98 @@ namespace Kettera_console
             return calendarEvents;
         }
 
+        public List <CalendarEvent> GetAllGymVisits()
+        { 
+            List <CalendarEvent> gymVisits = new List<CalendarEvent>();
+            string[] fields = { "gv.customer_ref, gv.dateandtime, cm.customer_name" };
+            string table = "gym_visit gv LEFT JOIN customer cm ON cm.customer_id = gv.customer_ref ORDER BY dateandtime ASC";
+            OleDbDataReader myReader;
+            myReader = GetData(fields, table);
 
+            bool notEoF;
+            notEoF = myReader.Read();
+            while (notEoF) 
+            {
+                CalendarEvent newGV;
+                int CustomerID = Convert.ToInt16(myReader["customer_ref"]);
+                DateTime Date = Convert.ToDateTime(myReader["dateandtime"]);
+                string CustomerName = myReader["customer_name"].ToString();
+                newGV = new CalendarEvent(CustomerID, Date, CustomerName);
+                gymVisits.Add(newGV);
+                notEoF = myReader.Read();
+            }
+            return gymVisits;
+        }
+
+        public List<CalendarEvent> GetGymVisitsByCustID(int custID)
+        {
+            List<CalendarEvent> gymVisits = new List<CalendarEvent>();
+            string[] fields = { "gv.customer_ref, gv.dateandtime, cm.customer_name" };
+            string table = "gym_visit gv LEFT JOIN customer cm ON cm.customer_id = gv.customer_ref";
+            OleDbDataReader myReader;
+            myReader = GetDataWhere(fields, table, "customer_ref", custID.ToString());
+
+            bool notEoF;
+            notEoF = myReader.Read();
+            while (notEoF)
+            {
+                CalendarEvent newGV;
+                int CustomerID = Convert.ToInt16(myReader["customer_ref"]);
+                DateTime Date = Convert.ToDateTime(myReader["dateandtime"]);
+                string CustomerName = myReader["customer_name"].ToString();
+                newGV = new CalendarEvent(CustomerID, Date, CustomerName);
+                gymVisits.Add(newGV);
+                notEoF = myReader.Read();
+            }
+            return gymVisits;
+        }
+
+        public List<CalendarEvent> GetGymVisitsFromTime(DateTime time1, DateTime time2)
+        {
+            List<CalendarEvent> gymVisits = new List<CalendarEvent>();
+            string[] fields = { "gv.customer_ref, gv.dateandtime, cm.customer_name" };
+            string table = "gym_visit gv LEFT JOIN customer cm ON cm.customer_id = gv.customer_ref";
+            OleDbDataReader myReader;
+            myReader = GetDataWhereBetween(fields, table, "gv.dateandtime", time1.ToString("yyyy-MM-dd"), time2.ToString("yyyy-MM-dd"), 1);   
+
+            bool notEoF;
+            notEoF = myReader.Read();
+            while (notEoF)
+            {
+                CalendarEvent newGV;
+                int CustomerID = Convert.ToInt16(myReader["customer_ref"]);
+                DateTime Date = Convert.ToDateTime(myReader["dateandtime"]);
+                string CustomerName = myReader["customer_name"].ToString();
+                newGV = new CalendarEvent(CustomerID, Date, CustomerName);
+                gymVisits.Add(newGV);
+                notEoF = myReader.Read();
+            }
+            return gymVisits;
+        }
+
+        public List<CalendarEvent> GetPtReservations()
+        {
+            List<CalendarEvent> ptVisits = new List<CalendarEvent>();
+            string[] fields = { "pt.*, t.trainer_name, cm.customer_name" };
+            string table = "pt_reservation pt INNER JOIN trainer t ON t.trainer_id = pt.trainer_ref INNER JOIN customer cm ON cm.customer_id = pt.customer_ref;";
+            OleDbDataReader myReader;
+            myReader = GetData(fields, table);
+
+            bool notEoF;    
+            notEoF = myReader.Read();
+            while (notEoF)
+            {
+                CalendarEvent newGV;
+                int ID = Convert.ToInt16(myReader["reservation_id"]);
+                int TrainerID = Convert.ToInt16(myReader["trainer_ref"]);
+                string TrainerName = myReader["trainer_name"].ToString();
+                DateTime Date = Convert.ToDateTime(myReader["dateandtime"]);
+                string CustomerName = myReader["customer_name"].ToString();
+                int CustomerID = Convert.ToInt16(myReader["customer_ref"]);
+                newGV = new CalendarEvent(ID, Date, CustomerID, CustomerName, TrainerName, TrainerID);
+                ptVisits.Add(newGV);
+            }
+            return ptVisits;
+        }
     }
 }

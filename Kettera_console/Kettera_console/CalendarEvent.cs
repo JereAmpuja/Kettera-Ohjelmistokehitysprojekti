@@ -13,7 +13,7 @@ namespace Kettera_console
         public int customerID { get; set; }
         public string customerName { get; set; }
         public int classID { get; set; }
-
+        public string trainerName { get; set; }
         public int trainerID { get; set; }
 
         public CalendarEvent()
@@ -23,6 +23,25 @@ namespace Kettera_console
             customerID = 0;
             customerName = "";
             classID = 0;
+            trainerID = 0;
+            trainerName = "";
+        }
+
+        //Konstruktori PT-käynneille
+        public CalendarEvent(int newID, DateTime newDate, int NewCustomerID, string newCustomerName, string newTrainerName, int newTrainerID) : this()
+        {
+            ID = newID;
+            Date = newDate;
+            customerID = NewCustomerID;
+            customerName = newCustomerName;
+            trainerName = newTrainerName;
+            trainerID = newTrainerID;
+        }
+        public CalendarEvent(int newCustomerID, DateTime newDate, string newCustomerName) : this() //Konstruktori salikäynneille
+        {
+            customerID = newCustomerID;
+            Date = newDate;
+            customerName = newCustomerName;
         }
 
         public CalendarEvent(int newID, DateTime newDate, int NewCustomerID, string newCustomerName, int newClassID, int newTrainerID)
@@ -35,6 +54,10 @@ namespace Kettera_console
             trainerID = newTrainerID;
         }
 
+        public string PtVisitToString()
+        {
+            return $"Reservation ID: {ID}, Date: {Date.ToString("dd-MM-yyyy HH:mm")}, Customer ID & Name: {customerID}, {customerName}, Trainer ID & Name: {trainerID}, {trainerName}";
+        }
         public override string ToString()
         {
             return $"Reservation ID: {ID}, Class ID: {classID}, Date: {Date.ToString("dd-MM-yyyy HH:mm")}, Customer ID & Name: {customerID}, {customerName}";
