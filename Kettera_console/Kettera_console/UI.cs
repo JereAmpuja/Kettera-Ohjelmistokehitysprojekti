@@ -108,7 +108,7 @@ namespace Kettera_console
                 text += "2: Poista asiakas.\n";
                 text += "3: Näytä asiakkaiden tiedot.\n";
                 text += "4: Muokkaa asiakkaan tietoja.\n";
-                text += "5: Lisää ryhmäliikunta- ja valmentaja käyntikertoja.\n";
+                text += "5: Lisää ilmaisia ryhmäliikunta- ja valmentaja käyntikertoja.\n";
                 text += "0: Palaa päävalikkoon.\n";
                 Console.WriteLine(text);
                 char value = Console.ReadKey().KeyChar;
@@ -294,6 +294,8 @@ namespace Kettera_console
                 text += "2: Poista varaus.\n";
                 text += "3: Näytä valmentajan kalenteri.\n";
                 text += "4: Näytä kaikkien valmentajien kalenterit.\n";
+                text += "5: Näytä kalenterit tietyltä aikaväliltä.\n";
+                text += "6: Näytä valmentajan kalenteri tietyltä aikaväliltä.\n";
                 text += "0: Palaa päävalikkoon.\n";
                 Console.WriteLine(text);
                 char value = Console.ReadKey().KeyChar;
@@ -311,12 +313,22 @@ namespace Kettera_console
                         break;
                     case '3':
                         Console.Clear();
-                        
+                        gm.PrintPtReservationsByPT();
                         ContinuePrompt();
                         break;
                     case '4':
                         Console.Clear();
-                        
+                        gm.PrintPtReservations();
+                        ContinuePrompt();
+                        break;
+                    case '5':
+                        Console.Clear();
+                        gm.PrintPtReservationsFromTo();
+                        ContinuePrompt();
+                        break;
+                    case '6':
+                        Console.Clear();
+                        gm.PrintPtReservationsFromToByPT();
                         ContinuePrompt();
                         break;
                     case '0':

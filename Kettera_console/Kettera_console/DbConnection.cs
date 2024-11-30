@@ -62,7 +62,7 @@ namespace Kettera_console
 
             myCommand.CommandType = CommandType.Text; //Määritetään kyselyn tyyppi (teksti).
 
-            Console.WriteLine(myCommand.CommandText); //Tulostaa kyselyn konsoliin.
+            //Console.WriteLine(myCommand.CommandText); //Tulostaa kyselyn konsoliin.
             OleDbDataReader myReader;
             myReader = myCommand.ExecuteReader(); //Suorittaa kyselyn ja palauttaa lukijan.
 
@@ -492,7 +492,7 @@ namespace Kettera_console
         {
             List<CalendarEvent> ptVisits = new List<CalendarEvent>();
             string[] fields = { "pt.*, t.trainer_name, cm.customer_name" };
-            string table = "pt_reservation pt INNER JOIN trainer t ON t.trainer_id = pt.trainer_ref INNER JOIN customer cm ON cm.customer_id = pt.customer_ref;";
+            string table = "(pt_reservation AS pt LEFT JOIN trainer AS t ON t.trainer_id = pt.trainer_ref) LEFT JOIN customer cm ON cm.customer_id = pt.customer_ref;";
             OleDbDataReader myReader;
             myReader = GetData(fields, table);
 
@@ -500,15 +500,15 @@ namespace Kettera_console
             notEoF = myReader.Read();
             while (notEoF)
             {
-                CalendarEvent newGV;
-                int ID = Convert.ToInt16(myReader["reservation_id"]);
-                int TrainerID = Convert.ToInt16(myReader["trainer_ref"]);
-                string TrainerName = myReader["trainer_name"].ToString();
-                DateTime Date = Convert.ToDateTime(myReader["dateandtime"]);
-                string CustomerName = myReader["customer_name"].ToString();
-                int CustomerID = Convert.ToInt16(myReader["customer_ref"]);
-                newGV = new CalendarEvent(ID, Date, CustomerID, CustomerName, TrainerName, TrainerID);
+                CalendarEvent newGV = new CalendarEvent();
+                newGV.ID = Convert.ToInt16(myReader["reservation_id"]);
+                newGV.trainerID = Convert.ToInt16(myReader["trainer_ref"]);
+                newGV.trainerName = myReader["trainer_name"].ToString();
+                newGV.Date = Convert.ToDateTime(myReader["dateandtime"]);
+                newGV.customerID = Convert.ToInt16(myReader["customer_ref"]);
+                newGV.customerName = myReader["customer_name"].ToString();
                 ptVisits.Add(newGV);
+                notEoF = myReader.Read();
             }
             return ptVisits;
         }

@@ -878,6 +878,7 @@ namespace Kettera_console
             string[] values = { customer.ID.ToString(), trainer.ID.ToString(), date.ToString("yyyy-MM-dd HH:mm") };
             Console.WriteLine("Personal trainer käynti lisätty onnistuneesti.");
             db.ExecuteInsertInto("pt_reservation", fields, values);
+            IncreaseDecreaseGroupPtVisits(customer.ID, 1, 0);
         }
 
         public void RemovePtReservation()
@@ -885,8 +886,16 @@ namespace Kettera_console
             PrintPtReservations();
             Console.Write("Poistettavan varauksen ID: ");
             int id = Convert.ToInt32(Console.ReadLine());
-            db.ExecuteDelete("pt_reservation", "reservation_id", id.ToString());
-            Console.WriteLine("Varaus poistettu onnistuneesti.");
+
+                for (int i = 0; i < calendarEvents.Count; i++)
+            {
+                    if (calendarEvents[i].ID == id)
+                {
+                    IncreaseDecreaseGroupPtVisits(calendarEvents[i].customerID, 1, 1);
+                    db.ExecuteDelete("pt_reservation", "reservation_id", id.ToString());
+                    Console.WriteLine("Varaus poistettu onnistuneesti.");
+                }
+            }
         }
 
         public void PrintPtReservations()
@@ -901,6 +910,105 @@ namespace Kettera_console
             for (int i = 0; i < calendarEvents.Count; i++)
             {
                 Console.WriteLine(calendarEvents[i].PtVisitToString());
+            }
+        }
+
+        public void PrintPtReservationsByPT()
+        {
+            calendarEvents = db.GetPtReservations();
+
+            Console.WriteLine("Valitse valmentaja jonka personal trainer käynnit haluat nähdä.\n");
+            trainer = RequestTrainer();
+            if (trainer == null)
+            {
+                return;
+            }
+            Console.Clear();
+            Console.WriteLine(trainer.Name + " varatut ajat:\n");
+            for (int i = 0; i < calendarEvents.Count; i++)
+            {
+                if (calendarEvents[i].trainerID == trainer.ID)
+                {
+                    Console.WriteLine(calendarEvents[i].PtVisitToString());
+                }
+            }
+        }
+
+        public void PrintPtReservationsByCustID()
+        {
+            Console.WriteLine("Valitse asiakas jonka personal trainer käynnit haluat nähdä.\n");
+            customer = RequestCustomer();
+            calendarEvents = db.GetPtReservations();
+            if (calendarEvents.Count < 1)
+            {
+                Console.WriteLine("Ei personal trainer käyntejä.");
+                return;
+            }
+            Console.Clear();
+            Console.WriteLine(customer.Name + " personal trainer käynnit:\n");
+            for (int i = 0; i < calendarEvents.Count; i++)
+            {
+                if (calendarEvents[i].customerID == customer.ID)
+                {
+                    Console.WriteLine(calendarEvents[i].PtVisitToString());
+                }
+            }
+        }
+
+        public void PrintPtReservationsFromTo()
+        {
+            Console.WriteLine("Valitse aika millä aikavälillä haluat nähdä personal trainer käynnit.\n");
+            Console.Write("Syötä ensimmäinen päivämäärä muodossa PP.KK.VVVV: ");
+            DateTime date1 = Convert.ToDateTime(Console.ReadLine());
+            Console.Write("Syötä toinen päivämäärä muodossa PP.KK.VVVV: ");
+            DateTime date2 = Convert.ToDateTime(Console.ReadLine());
+            calendarEvents = db.GetPtReservations();
+
+            if (calendarEvents.Count < 1)
+            {
+                Console.WriteLine("Ei personal trainer käyntejä.");
+                return;
+            }
+
+            Console.Clear();
+            Console.WriteLine("Personal trainer käynnit ajalta " + date1.ToString("dd.MM.yyyy") + " - " + date2.ToString("dd.MM.yyyy") + "\n");
+            for (int i = 0; i < calendarEvents.Count; i++)
+            {
+                if (calendarEvents[i].Date >= date1 && calendarEvents[i].Date <= date2)
+                {
+                    Console.WriteLine(calendarEvents[i].PtVisitToString());
+                }
+            }
+        }
+
+        public void PrintPtReservationsFromToByPT()
+        {
+            Console.WriteLine("Valitse valmentaja jonka personal trainer käynnit haluat nähdä.\n");
+            trainer = RequestTrainer();
+            if (trainer == null)
+            {
+                return;
+            }
+            Console.Write("Syötä ensimmäinen päivämäärä muodossa PP.KK.VVVV: ");
+            DateTime date1 = Convert.ToDateTime(Console.ReadLine());
+            Console.Write("Syötä toinen päivämäärä muodossa PP.KK.VVVV: ");
+            DateTime date2 = Convert.ToDateTime(Console.ReadLine());
+            calendarEvents = db.GetPtReservations();
+
+            if (calendarEvents.Count < 1)
+            {
+                Console.WriteLine("Ei personal trainer käyntejä.");
+                return;
+            }
+
+            Console.Clear();
+            Console.WriteLine(trainer.Name + " personal trainer käynnit ajalta " + date1.ToString("dd.MM.yyyy") + " - " + date2.ToString("dd.MM.yyyy") + "\n");
+            for (int i = 0; i < calendarEvents.Count; i++)
+            {
+                if (calendarEvents[i].Date >= date1 && calendarEvents[i].Date <= date2 && calendarEvents[i].trainerID == trainer.ID)
+                {
+                    Console.WriteLine(calendarEvents[i].PtVisitToString());
+                }
             }
         }
     }
