@@ -412,9 +412,11 @@ namespace Kettera_console
             string keyfield = "trainer_id";
             string keyValue = trainer.ID.ToString();
 
+            DeleteGroupClassByTrainerID(trainer.ID);
+
             db.ExecuteDelete("trainer", keyfield, keyValue);
 
-            Console.WriteLine("\nValmentaja poistettu onnistuneesti.");
+            Console.WriteLine("\nValmentaja poistettu onnistuneesti. Huomioi, että ryhmäliikuntatunnit, jossa valmentaja oli ovat poistettu myös.");
         }
         //Muokkaa Valmentajan tietoja. (Vain nimi..)
         public void EditTrainer()
@@ -465,6 +467,8 @@ namespace Kettera_console
 
             string keyfield = "customer_id";
             string keyValue = customer.ID.ToString();
+
+            RemoveCustomerFromAllGroupClassesByID(customer.ID);
 
             db.ExecuteDelete("customer", keyfield, keyValue);
 
@@ -676,6 +680,18 @@ namespace Kettera_console
             DeleteGroupClassReservationsByReservationID(id);
         }
 
+        public void RemoveCustomerFromAllGroupClassesByID(int custID)
+        { 
+            calendarEvents = db.GetAllCalendarEvents();
+            for (int i = 0; i < calendarEvents.Count; i++)
+            {
+                if (calendarEvents[i].customerID == custID)
+                {
+                    DeleteGroupClassReservationsByReservationID(calendarEvents[i].ID);
+                }
+            }
+        }
+
         //Metodi joka poistaa ryhmäliikuntatunnin. Kutsuu metodia joka poistaa varaukset.
         public void DeleteGroupClass()
         {
@@ -695,6 +711,22 @@ namespace Kettera_console
             db.ExecuteDelete("group_class", keyfield, keyValue);
             Console.WriteLine("\nRyhmäliikuntatunti poistettu onnistuneesti.");
         }
+
+        public void DeleteGroupClassByTrainerID(int trainerID)
+        {
+            groupClasses = db.GetGroupClasses();
+            for (int i = 0; i < groupClasses.Count; i++)
+            {
+                if (groupClasses[i].TrainerID == trainerID)
+                {
+                    DeleteGroupClassReservationsByGcID(groupClasses[i].ID);
+                    string keyfield = "class_id";
+                    string keyValue = groupClasses[i].ID.ToString();
+                    db.ExecuteDelete("group_class", keyfield, keyValue);
+                }
+            }
+        }
+
         //Metodi, joka poistaa ryhmäliikuntatunnin varaukset ID:n perusteella. Kutsuu metodia joka lisää tai vähentää asiakkaan ryhmäliikuntakertoja.
         private void DeleteGroupClassReservationsByGcID(int groupClassID)
         {
