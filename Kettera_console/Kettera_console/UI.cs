@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Reflection.Emit;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -71,6 +72,10 @@ namespace Kettera_console
                         Console.Clear();
                         GymVisitMenu();
                         break;
+                    case '7':
+                        Console.Clear();
+                        ReportMenu();  
+                        break;
                     default:
                         Console.WriteLine("\nVirheellinen syöte.");
                         ContinuePrompt();
@@ -94,6 +99,7 @@ namespace Kettera_console
             text += "4: Hallitse varauksia.\n";
             text += "5: Hallitse valmentajien kalentereja.\n";
             text += "6: Kuntosalikäynnit.\n";
+            text += "7: Raportit.\n";
             text += "\nValitse toiminto: ";
             Console.Write(text);
             return Console.ReadKey().KeyChar;
@@ -285,7 +291,7 @@ namespace Kettera_console
             }
         }
 
-        public void TrainerCalendarMenu()
+        private void TrainerCalendarMenu()
         {
             while(true)
             {
@@ -296,6 +302,7 @@ namespace Kettera_console
                 text += "4: Näytä kaikkien valmentajien kalenterit.\n";
                 text += "5: Näytä kalenterit tietyltä aikaväliltä.\n";
                 text += "6: Näytä valmentajan kalenteri tietyltä aikaväliltä.\n";
+                text += "7: Näytä valmentajan kalenteri asiakkaan ID:n perusteella.\n";
                 text += "0: Palaa päävalikkoon.\n";
                 Console.WriteLine(text);
                 char value = Console.ReadKey().KeyChar;
@@ -331,6 +338,11 @@ namespace Kettera_console
                         gm.PrintPtReservationsFromToByPT();
                         ContinuePrompt();
                         break;
+                    case '7':
+                        Console.Clear();
+                        gm.PrintPtReservationsFromToByCustID();
+                        ContinuePrompt();
+                        break;
                     case '0':
                         return;
                     default:
@@ -341,12 +353,22 @@ namespace Kettera_console
             }
         }
 
-        public void GymVisitMenu()
+        private void GymVisitMenu()
         {
             while(true)
             {
-                Console.WriteLine("Kuntosalikäynnit.\n");
-                Console.WriteLine("1: Lisää kuntosalikäynti asiakkaalle\n2: Kaikki kuntosalikäynnit\n3: Asiakkaan kuntosalikäynnit\n4: Kuntosalikäynnit aikavälillä\n0: Poistu\n");
+                string text;
+                text = "Kuntosalikäynnit.\n";
+                text += "1: Merkitse kuntosalikäynti.\n";
+                text += "2: Näytä kaikki kuntosalikäynnit.\n";
+                text += "3: Näytä asiakkaan kuntosalikäynnit.\n";
+                text += "4: Näytä kuntosalikäynnit aikavälillä.\n";
+                text += "5: Näytä asiakkaan kuntosalikäynnit aikaväliltä.\n";
+                text += "0: Palaa päävalikkoon.\n";
+
+                Console.WriteLine(text);
+
+                
                 Console.Write("Syötä valinta: ");
                 char value = Console.ReadKey().KeyChar;
 
@@ -372,6 +394,11 @@ namespace Kettera_console
                         gm.PrintGymVisitsFromTime();
                         ContinuePrompt();
                         break;
+                    case '5':
+                        Console.Clear();
+                        gm.PrintGymVisitsFromToByCustID();
+                        ContinuePrompt();
+                        break;
                     case '0':
                         return;
                     default:
@@ -382,5 +409,61 @@ namespace Kettera_console
             }
             
         }
+        private void ReportMenu()
+        {
+            while(true)
+            {
+                Console.WriteLine("Raportit.\n");
+                Console.WriteLine("1: Asiakkaan valmentaja kerrat\n2: Asiakkaan ryhmäliikunta kerrat\n3: Valmennuskerrat ja asiakkaat ajalta.\n4: Kuntosalikäynnit\n5: Asiakkaan käynnit\n6: Valmentajan käynnit\n7: Käynnit aikavälillä\n0: Poistu\n");
+                Console.Write("Syötä valinta: ");
+                char value = Console.ReadKey().KeyChar;
+
+                switch (value)
+                {
+                    case '1':
+                        Console.Clear();
+                        gm.TimesCustomerUsedTrainer();
+                        ContinuePrompt();
+                        break;
+                    case '2':
+                        Console.Clear();
+                        gm.TimesClassesAttended();
+                        ContinuePrompt();
+                        break;
+                    case '3':
+                        Console.Clear();
+                        gm.TrainerCustomerCount();
+                        ContinuePrompt();
+                        break;
+                    case '4':
+                        Console.Clear();
+                        gm.PrintGymVisitsFromTime();
+                        ContinuePrompt();
+                        break;
+                    case '5':
+                        Console.Clear();
+                        gm.PrintGymVisitsByCustID();
+                        ContinuePrompt();
+                        break;
+                    case '6':
+                        Console.Clear();
+                        gm.PrintPtReservationsByPT();
+                        ContinuePrompt();
+                        break;
+                    case '7':
+                        Console.Clear();
+                        gm.PrintGymVisitsFromTime();
+                        ContinuePrompt();
+                        break;
+                    case '0':
+                        return;
+                    default:
+                        Console.WriteLine("\nVirheellinen syöte.");
+                        ContinuePrompt();
+                        break;
+                }
+            }
+        }
+
     }   
 }

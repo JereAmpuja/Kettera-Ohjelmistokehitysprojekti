@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -436,6 +437,35 @@ namespace Kettera_console
             Console.WriteLine("\nMuutokset tallennettu onnistuneesti.");
         }
 
+        public void TrainerCustomerCount()
+        {
+            trainers = db.GetAllTrainers();
+            calendarEvents = db.GetPtReservations();
+            Console.WriteLine("Miltä aikaväliltä haluat nähdä valmentajien asiakasmäärät?\n");
+            Console.Write("Syötä alkupäivämäärä muodossa PP.KK.VVVV: ");
+            DateTime startDate = Convert.ToDateTime(Console.ReadLine());
+            Console.Write("\nSyötä loppupäivämäärä muodossa PP.KK.VVVV: ");
+            DateTime endDate = Convert.ToDateTime(Console.ReadLine());
+
+            for (int i = 0; i < trainers.Count; i++)
+            {
+                int counter = 0;
+                HashSet<int> customerIDs = new HashSet<int>();
+
+                for (int j = 0; j < calendarEvents.Count; j++)
+                {
+                    if (calendarEvents[j].trainerID == trainers[i].ID && calendarEvents[j].Date >= startDate && calendarEvents[j].Date <= endDate)
+                    {
+                        counter++;
+                        customerIDs.Add(calendarEvents[j].customerID);
+                    }
+                }
+                Console.WriteLine("Valmentaja: " + trainers[i].Name + ":");
+                Console.WriteLine("Asiakkaita: " + customerIDs.Count);
+                Console.WriteLine("Käyntejä: " + counter + "\n");
+            }
+        }
+
         public void AddCustomer()
         {
             Console.Write("Asiakkaan nimi muodossa ETUNIMI SUKUNIMI: ");
@@ -586,6 +616,43 @@ namespace Kettera_console
             {
                 Console.WriteLine("\nMuutokset hylätty.");
             }
+        }
+
+        public void TimesCustomerUsedTrainer()
+        {
+            Console.Clear();
+            Console.WriteLine("Valitse asiakas jonka valmentajakäynnit haluat nähdä.\n");
+            customer = RequestCustomer();
+            if (customer == null)
+                return;
+            calendarEvents = db.GetPtReservations();
+            int counter = 0;
+            for (int i = 0; i < calendarEvents.Count; i++)
+            {
+                if (calendarEvents[i].customerID == customer.ID)
+                {
+                    counter++;
+                }
+            }
+            Console.WriteLine("\nAsiakas " + customer.Name + " on käynyt valmentajalla " + counter + " kertaa.");
+        }
+
+        public void TimesClassesAttended()
+        {
+            Console.WriteLine("Valitse asiakas jonka ryhmäliikuntatunti käynnit haluat nähdä.\n");
+            customer = RequestCustomer();
+            if (customer == null)
+                return;
+            calendarEvents = db.GetAllCalendarEvents();
+            int counter = 0;
+            for (int i = 0; i < calendarEvents.Count; i++)
+            {
+                if (calendarEvents[i].customerID == customer.ID)
+                {
+                    counter++;
+                }
+            }
+            Console.WriteLine("\nAsiakas " + customer.Name + " on käynyt ryhmäliikuntatunneilla " + counter + " kertaa.");
         }
 
         public void AddGroupPtVisits()
@@ -1040,6 +1107,68 @@ namespace Kettera_console
                 if (calendarEvents[i].Date >= date1 && calendarEvents[i].Date <= date2 && calendarEvents[i].trainerID == trainer.ID)
                 {
                     Console.WriteLine(calendarEvents[i].PtVisitToString());
+                }
+            }
+        }
+
+        public void PrintPtReservationsFromToByCustID()
+        {
+            Console.WriteLine("Valitse asiakas jonka personal trainer käynnit haluat nähdä.\n");
+            customer = RequestCustomer();
+            if (customer == null)
+            {
+                return;
+            }
+            Console.Write("Syötä ensimmäinen päivämäärä muodossa PP.KK.VVVV: ");
+            DateTime date1 = Convert.ToDateTime(Console.ReadLine());
+            Console.Write("Syötä toinen päivämäärä muodossa PP.KK.VVVV: ");
+            DateTime date2 = Convert.ToDateTime(Console.ReadLine());
+            calendarEvents = db.GetPtReservations();
+
+            if (calendarEvents.Count < 1)
+            {
+                Console.WriteLine("Ei personal trainer käyntejä.");
+                return;
+            }
+
+            Console.Clear();
+            Console.WriteLine(customer.Name + " personal trainer käynnit ajalta " + date1.ToString("dd.MM.yyyy") + " - " + date2.ToString("dd.MM.yyyy") + "\n");
+            for (int i = 0; i < calendarEvents.Count; i++)
+            {
+                if (calendarEvents[i].Date >= date1 && calendarEvents[i].Date <= date2 && calendarEvents[i].customerID == customer.ID)
+                {
+                    Console.WriteLine(calendarEvents[i].PtVisitToString());
+                }
+            }
+        }
+
+        public void PrintGymVisitsFromToByCustID()
+        {
+            Console.WriteLine("Valitse asiakas jonka kuntosalikäynnit haluat nähdä.\n");
+            customer = RequestCustomer();
+            if (customer == null)
+            {
+                return;
+            }
+            Console.Write("Syötä ensimmäinen päivämäärä muodossa PP.KK.VVVV: ");
+            DateTime date1 = Convert.ToDateTime(Console.ReadLine());
+            Console.Write("Syötä toinen päivämäärä muodossa PP.KK.VVVV: ");
+            DateTime date2 = Convert.ToDateTime(Console.ReadLine());
+            calendarEvents = db.GetGymVisitsByCustID(customer.ID);
+
+            if (calendarEvents.Count < 1)
+            {
+                Console.WriteLine("Ei kuntosalikäyntejä.");
+                return;
+            }
+
+            Console.Clear();
+            Console.WriteLine(customer.Name + " kuntosalikäynnit ajalta " + date1.ToString("dd.MM.yyyy") + " - " + date2.ToString("dd.MM.yyyy") + "\n");
+            for (int i = 0; i < calendarEvents.Count; i++)
+            {
+                if (calendarEvents[i].Date >= date1 && calendarEvents[i].Date <= date2)
+                {
+                    Console.WriteLine(calendarEvents[i].ToString());
                 }
             }
         }
