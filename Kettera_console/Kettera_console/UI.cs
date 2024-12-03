@@ -302,7 +302,7 @@ namespace Kettera_console
                 text += "4: Näytä kaikkien valmentajien kalenterit.\n";
                 text += "5: Näytä kalenterit tietyltä aikaväliltä.\n";
                 text += "6: Näytä valmentajan kalenteri tietyltä aikaväliltä.\n";
-                text += "7: Näytä valmentajan kalenteri asiakkaan ID:n perusteella.\n";
+                text += "7: Näytä valmentajan kalenteri asiakkaan ID:n perusteella.\n"; 
                 text += "0: Palaa päävalikkoon.\n";
                 Console.WriteLine(text);
                 char value = Console.ReadKey().KeyChar;

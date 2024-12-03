@@ -474,6 +474,11 @@ namespace Kettera_console
             DateTime birthDay = Convert.ToDateTime(Console.ReadLine());
             Console.Write("\nJäsenyyden päättymispäivä muodossa PP.KK.VVVV: ");
             DateTime membershipEndDay = Convert.ToDateTime(Console.ReadLine());
+            if (membershipEndDay < DateTime.Now)
+            {
+                Console.WriteLine("Jäsenyyden päättymispäivä ei voi olla pienempi kuin tämä päivä.");
+                return;
+            }
             Console.WriteLine();
             //Kysytään valmentaja metodia käyttäen.
             Console.WriteLine("Määritä valmentaja. Saatavilla olevat valmentajat:\n");
