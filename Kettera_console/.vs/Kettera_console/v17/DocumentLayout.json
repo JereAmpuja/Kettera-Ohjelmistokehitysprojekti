@@ -3,11 +3,11 @@
   "WorkspaceRootPath": "C:\\Users\\jerea\\Documents\\GitHub\\Kettera-Ohjelmistokehitysprojekti\\Kettera_console\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{30067B98-59C1-48D3-A127-8162130EAE90}|Kettera_console\\Kettera_console.csproj|C:\\Users\\jerea\\Documents\\GitHub\\Kettera-Ohjelmistokehitysprojekti\\Kettera_console\\kettera_console\\gymmanagement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{30067B98-59C1-48D3-A127-8162130EAE90}|Kettera_console\\Kettera_console.csproj|c:\\users\\jerea\\documents\\github\\kettera-ohjelmistokehitysprojekti\\kettera_console\\kettera_console\\gymmanagement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{30067B98-59C1-48D3-A127-8162130EAE90}|Kettera_console\\Kettera_console.csproj|solutionrelative:kettera_console\\gymmanagement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{30067B98-59C1-48D3-A127-8162130EAE90}|Kettera_console\\Kettera_console.csproj|c:\\users\\jerea\\documents\\github\\kettera-ohjelmistokehitysprojekti\\kettera_console\\kettera_console\\ui.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{30067B98-59C1-48D3-A127-8162130EAE90}|Kettera_console\\Kettera_console.csproj|C:\\Users\\jerea\\Documents\\GitHub\\Kettera-Ohjelmistokehitysprojekti\\Kettera_console\\kettera_console\\ui.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{30067B98-59C1-48D3-A127-8162130EAE90}|Kettera_console\\Kettera_console.csproj|solutionrelative:kettera_console\\ui.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -52,7 +52,7 @@
               "RelativeDocumentMoniker": "Kettera_console\\UI.cs",
               "ToolTip": "C:\\Users\\jerea\\Documents\\GitHub\\Kettera-Ohjelmistokehitysprojekti\\Kettera_console\\Kettera_console\\UI.cs",
               "RelativeToolTip": "Kettera_console\\UI.cs",
-              "ViewState": "AQIAAA4BAAAAAAAAAAAgwBgBAAA2AAAA",
+              "ViewState": "AQIAAP8AAAAAAAAAAAAgwBgBAAAqAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-25T08:14:00.056Z",
               "EditorCaption": ""
@@ -65,7 +65,7 @@
               "RelativeDocumentMoniker": "Kettera_console\\GymManagement.cs",
               "ToolTip": "C:\\Users\\jerea\\Documents\\GitHub\\Kettera-Ohjelmistokehitysprojekti\\Kettera_console\\Kettera_console\\GymManagement.cs",
               "RelativeToolTip": "Kettera_console\\GymManagement.cs",
-              "ViewState": "AQIAAMgBAAAAAAAAAAArwNcBAAAtAAAA",
+              "ViewState": "AQIAACsBAAAAAAAAAAArwC4BAAAYAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-11-26T10:19:49.418Z",
               "EditorCaption": ""
