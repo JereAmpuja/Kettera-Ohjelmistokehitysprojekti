@@ -278,7 +278,7 @@ namespace Kettera_console
                         break;
                     case '4':
                         Console.Clear();
-                        gm.PrintAllGcCalendarEvents();
+                        gm.EditGroupClass();
                         ContinuePrompt();
                         break;
                     case '0':
