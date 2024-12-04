@@ -40,9 +40,7 @@ namespace Kettera_console
         }
 
         //TÄSTÄ ETEENPÄIN METODIT JOILLA VOIDAAN TEHDÄ KOMENTOJA TIETOKANTAAN.
-
-        //Parametreina kentät joita halutaan hakea ja taulu josta ne haetaan.
-        private OleDbDataReader GetData(string[] fields, string table)
+        private OleDbDataReader GetData(string[] fields, string table)//Parametreina kentät joita halutaan hakea ja taulu josta ne haetaan.
         {
             OleDbCommand myCommand = new OleDbCommand();
 
@@ -68,9 +66,7 @@ namespace Kettera_console
 
             return myReader;
         }
-
-        //Sama homma, mutta lisätään where tekijät parametreina.
-        private OleDbDataReader GetDataWhere(string[] fields, string table, string keyField, string keyValue)
+        private OleDbDataReader GetDataWhere(string[] fields, string table, string keyField, string keyValue)//Sama homma, mutta lisätään where tekijät parametreina.
         {
             OleDbCommand myCommand = new OleDbCommand();
 
@@ -96,9 +92,7 @@ namespace Kettera_console
             myReader = myCommand.ExecuteReader();
             return myReader;
         }
-
-        //Haetaan tiettyä tietoa, missä arvo on joltain väliltä (esim. päivämäärät).
-        private OleDbDataReader GetDataWhereBetween(string[] fields, string table, string keyField, string minValue, string maxValue, int x)
+        private OleDbDataReader GetDataWhereBetween(string[] fields, string table, string keyField, string minValue, string maxValue, int x)//Haetaan tiettyä tietoa, missä arvo on joltain väliltä (esim. päivämäärät).
         {
             OleDbCommand myCommand = new OleDbCommand();
 
@@ -133,8 +127,7 @@ namespace Kettera_console
             myReader = myCommand.ExecuteReader();
             return myReader;
         }
-
-        private string NonQueryUpdate(string table, string[] fields, string[] values, string keyField, string keyValue)
+        private string NonQueryUpdate(string table, string[] fields, string[] values, string keyField, string keyValue)//Päivittää tietoa tietokantaan.
         {
             string query = "UPDATE ";
             query += table + " SET ";
@@ -150,12 +143,10 @@ namespace Kettera_console
             {
                 query += " WHERE " + keyField + " = " + keyValue ;
             }
-            Console.WriteLine(query);
 
             return query;
         }
-
-        private string NonQueryInsertInto(string table, string[] fields, string[] values)
+        private string NonQueryInsertInto(string table, string[] fields, string[] values)//Lisää tietoa tietokantaan.
         {
             string query = "INSERT INTO ";
             query += table + " (";
@@ -179,16 +170,13 @@ namespace Kettera_console
                 }
             }
             return query + ");";
-        }
-
-        public string NonQueryDelete(string table, string keyField, string keyValue)
+        } 
+        public string NonQueryDelete(string table, string keyField, string keyValue)//Rakentaa delete komennon parametreina saaduilla arvoilla.
         {
             string query = "DELETE FROM " + table + " WHERE " + keyField + " = " + keyValue;
             return query;
         }
-
-        //Suorittaa delete komennon tietokantaan. Kutsuu yllä olevaa metodia.
-        public void ExecuteDelete(string table, string keyField, string keyValue)
+        public void ExecuteDelete(string table, string keyField, string keyValue)//Suorittaa delete komennon tietokantaan. Kutsuu yllä olevaa metodia.
         {
             string query = NonQueryDelete(table, keyField, keyValue);
             OleDbCommand myCommand = new OleDbCommand();
@@ -201,10 +189,7 @@ namespace Kettera_console
 
             myCommand.ExecuteNonQuery();
         }
-
-
-        //Suorittaa insert into komennon tietokantaan. Kutsuu yllä olevaa metodia "NonQueryInsertInto".
-        public void ExecuteInsertInto(string table, string[] fields, string[] values)
+        public void ExecuteInsertInto(string table, string[] fields, string[] values)//Suorittaa insert into komennon tietokantaan. Kutsuu yllä olevaa metodia "NonQueryInsertInto".
         {
             string query = NonQueryInsertInto(table, fields, values);
             OleDbCommand myCommand = new OleDbCommand();
@@ -217,9 +202,7 @@ namespace Kettera_console
 
             myCommand.ExecuteNonQuery();
         }
-
-        //Suorittaa update komennon tietokantaan. Kutsuu yllä olevaa metodia nimeltä "NonQueryUpdate".
-        public void ExecuteUpdate(string table, string[] fields, string[] values, string keyField, string keyValue)
+        public void ExecuteUpdate(string table, string[] fields, string[] values, string keyField, string keyValue)//Suorittaa update komennon tietokantaan. Kutsuu yllä olevaa metodia nimeltä "NonQueryUpdate".
         {
             string query = NonQueryUpdate(table, fields, values, keyField, keyValue);
             OleDbCommand myCommand = new OleDbCommand();
@@ -232,8 +215,7 @@ namespace Kettera_console
 
             myCommand.ExecuteNonQuery();
         }
-
-        public Customer GetCustomerByID(int custID)
+        public Customer GetCustomerByID(int custID)//Hakee asiakkaan ID:n perusteella.
         {
             Customer newC = null;
             string[] fields = { "c.*, t.trainer_name" };
@@ -263,9 +245,7 @@ namespace Kettera_console
             }
             return newC;
         }
-
-        //Hakee asiakkaan nimen perusteella ja palauttaa asiakas olion.
-        public Customer GetCustomerByName(string custName)
+        public Customer GetCustomerByName(string custName)//Hakee asiakkaan tiedot nimen perusteella.
         {
             Customer newC = null;
             string[] fields = { "c.*, t.trainer_name" };
@@ -295,9 +275,7 @@ namespace Kettera_console
             }
             return newC;
         }
-
-        //Hakee kaikki asiakkaat tietokannasta ja palauttaa ne listana.
-        public List<Customer> GetAllCustomers()
+        public List<Customer> GetAllCustomers()//Hakee kaikki asiakkaat.
         {
             List<Customer> customers = new List<Customer>();
             string[] fields = { "c.*, t.trainer_name" };
@@ -328,8 +306,7 @@ namespace Kettera_console
             }
             return customers;
         }
-
-        public List<Trainer> GetAllTrainers() //Hakee kaikki valmentajat tietokannasta ja palauttaa ne listana.
+        public List<Trainer> GetAllTrainers() //Hakee kaikki valmentajat.
         {
             List<Trainer> trainers = new List<Trainer>();
             string[] fields = { "*" };
@@ -354,9 +331,7 @@ namespace Kettera_console
             }
             return trainers;
         }
-
-        //Hakee kaikki ryhmäliikuntatunnit tietokannasta ja palauttaa ne listana.
-        public List<GroupClass> GetGroupClasses()
+        public List<GroupClass> GetGroupClasses()//Hakee kaikki ryhmäliikuntatunni.
         {
             List<GroupClass> groupClasses = new List<GroupClass>();
             string[] fields = { "g.*, t.trainer_name" };
@@ -385,9 +360,7 @@ namespace Kettera_console
             }
             return groupClasses;
         }
-
-        //Hakee kaikki kalenteritapahtumat tietokannasta ja palauttaa ne listana.
-        public List<CalendarEvent> GetAllCalendarEvents()
+        public List<CalendarEvent> GetAllCalendarEvents()//Hakee kaikki kalenteritapahtumat.
         {
             List<CalendarEvent> calendarEvents = new List<CalendarEvent>();
             string[] fields = { "gcr.*, gc.dateandtime, cm.customer_name, gc.trainer_ref" };
@@ -418,8 +391,7 @@ namespace Kettera_console
             }
             return calendarEvents;
         }
-
-        public List <CalendarEvent> GetAllGymVisits()
+        public List <CalendarEvent> GetAllGymVisits()//Hakee kaikki kuntosalikäynnit.
         { 
             List <CalendarEvent> gymVisits = new List<CalendarEvent>();
             string[] fields = { "gv.customer_ref, gv.dateandtime, cm.customer_name" };
@@ -441,8 +413,7 @@ namespace Kettera_console
             }
             return gymVisits;
         }
-
-        public List<CalendarEvent> GetGymVisitsByCustID(int custID)
+        public List<CalendarEvent> GetGymVisitsByCustID(int custID)//Hakee asiakkaan kuntosalikäynnit ID:n perusteella.
         {
             List<CalendarEvent> gymVisits = new List<CalendarEvent>();
             string[] fields = { "gv.customer_ref, gv.dateandtime, cm.customer_name" };
@@ -464,8 +435,7 @@ namespace Kettera_console
             }
             return gymVisits;
         }
-
-        public List<CalendarEvent> GetGymVisitsFromTime(DateTime time1, DateTime time2)
+        public List<CalendarEvent> GetGymVisitsFromTime(DateTime time1, DateTime time2)//Hakee kuntosalikäynnit aikavälin perusteella.
         {
             List<CalendarEvent> gymVisits = new List<CalendarEvent>();
             string[] fields = { "gv.customer_ref, gv.dateandtime, cm.customer_name" };
@@ -487,8 +457,7 @@ namespace Kettera_console
             }
             return gymVisits;
         }
-
-        public List<CalendarEvent> GetPtReservations()
+        public List<CalendarEvent> GetPtReservations()//Hakee kaikki PT varaukset.
         {
             List<CalendarEvent> ptVisits = new List<CalendarEvent>();
             string[] fields = { "pt.*, t.trainer_name, cm.customer_name" };

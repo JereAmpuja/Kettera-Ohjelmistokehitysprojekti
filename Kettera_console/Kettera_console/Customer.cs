@@ -59,6 +59,6 @@ namespace Kettera_console
 
             return $"ID: {ID}, Nimi: {Name}, Syntymäpäivä: {BirthDay.ToString("dd-MM-yyyy")}, Jäsenyyden loppumispäivä: {MembershipEndDay.ToString("dd-MM-yyyy")}, Valmentaja: {PersonalTrainerName}, Käyntejä kuntosalilla: {GymVisits}, Ryhmäliikuntakäyntejä: {GroupVisits}";
         }
-
+        
     }
 }

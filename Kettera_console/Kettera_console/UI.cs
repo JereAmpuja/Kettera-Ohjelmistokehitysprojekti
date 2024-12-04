@@ -96,9 +96,9 @@ namespace Kettera_console
             text = "1: Hallitse asiakkaita.\n";
             text += "2: Hallitse valmentajia.\n";
             text += "3: Hallitse ryhmäliikuntatunteja.\n";
-            text += "4: Hallitse varauksia.\n";
-            text += "5: Hallitse valmentajien kalentereja.\n";
-            text += "6: Kuntosalikäynnit.\n";
+            text += "4: Hallitse ryhmäliikuntavarauksia.\n";
+            text += "5: Hallitse valmentajien kalentereja ja varauksia.\n";
+            text += "6: Hallitse kuntosalikäyntejä.\n";
             text += "7: Raportit.\n";
             text += "\nValitse toiminto: ";
             Console.Write(text);
@@ -112,9 +112,10 @@ namespace Kettera_console
                 string text;
                 text = "1: Lisää asiakas.\n";
                 text += "2: Poista asiakas.\n";
-                text += "3: Näytä asiakkaiden tiedot.\n";
-                text += "4: Muokkaa asiakkaan tietoja.\n";
-                text += "5: Lisää ilmaisia ryhmäliikunta- ja valmentaja käyntikertoja.\n";
+                text += "3: Muokkaa asiakkaan tietoja.\n";
+                text += "4: Hae asiakkaan tiedot.\n";
+                text += "5: Hae kaikkien asiakkaiden tiedot.\n";
+                text += "6: Lisää / vähennä asiakkaan ryhmä & pt käyttökertoja.\n";
                 text += "0: Palaa päävalikkoon.\n";
                 Console.WriteLine(text);
                 char value = Console.ReadKey().KeyChar;
@@ -133,15 +134,20 @@ namespace Kettera_console
                         break;
                     case '3':
                         Console.Clear();
-                        gm.PrintAllCustomers();
+                        gm.EditCustomer();
                         ContinuePrompt();
                         break;
                     case '4':
                         Console.Clear();
-                        gm.EditCustomer();
+                        gm.PrintCustomerByNameID();
                         ContinuePrompt();
                         break;
                     case '5':
+                        Console.Clear();
+                        gm.PrintAllCustomers();
+                        ContinuePrompt();
+                        break;
+                    case '6':
                         Console.Clear();
                         gm.AddGroupPtVisits();
                         ContinuePrompt();
@@ -163,8 +169,8 @@ namespace Kettera_console
                 string text;
                 text = "1: Lisää valmentaja.\n";
                 text += "2: Poista valmentaja.\n";
-                text += "3: Näytä valmentajien tiedot.\n";
-                text += "4: Muokkaa valmentajan tietoja (vain nimi).\n";
+                text += "3: Muokkaa valmentajan tietoja (vain nimi).\n";
+                text += "4: Näytä valmentajien tiedot.\n";
                 text += "0: Palaa päävalikkoon.\n";
                 Console.WriteLine(text);
                 char value = Console.ReadKey().KeyChar;
@@ -183,12 +189,12 @@ namespace Kettera_console
                         break;
                     case '3':
                         Console.Clear();
-                        gm.PrintAllTrainers();
+                        gm.EditTrainer();
                         ContinuePrompt();
                         break;
                     case '4':
                         Console.Clear();
-                        gm.EditTrainer();
+                        gm.PrintAllTrainers();
                         ContinuePrompt();
                         break;
                     case '0':
@@ -208,8 +214,8 @@ namespace Kettera_console
             string text;
                 text = "1: Lisää ryhmäliikuntatunti.\n";
                 text += "2: Poista ryhmäliikuntatunti.\n";
-                text += "3: Näytä ryhmäliikuntatunnit.\n";
-                text += "4: Muokkaa ryhmäliikuntatuntia.\n";
+                text += "3: Muokkaa ryhmäliikuntatuntia.\n";
+                text += "4: Näytä ryhmäliikuntatunnit.\n";
                 text += "0: Palaa päävalikkoon.\n";
                 Console.WriteLine(text);
                 char value = Console.ReadKey().KeyChar;
@@ -227,12 +233,12 @@ namespace Kettera_console
                         break;
                     case '3':
                         Console.Clear();
-                        gm.PrintAllGroupClasses();
+                        gm.EditGroupClass();
                         ContinuePrompt();
                         break;
                         case '4':
                         Console.Clear();
-                        gm.EditGroupClass();
+                        gm.PrintAllGroupClasses();
                         ContinuePrompt();                   
                         break;
                     case '0':
@@ -254,8 +260,11 @@ namespace Kettera_console
                 string text;    
                 text = "1: Lisää asiakas ryhmäliikuntatunnille.\n";
                 text += "2: Poista asiakas ryhmäliikuntatunnilta.\n";
-                text += "3: Näytä varaukset.\n";
-                text += "4: Muokkaa varausta.\n";
+                text += "3: Muokkaa ryhmäliikuntatunnin varausta.\n";
+                text += "4: Näytä varaukset.\n";
+                text += "5: Näytä asiakkaan varaukset.\n";
+                text += "6: Näytä varaukset valmentajan mukaan.\n";
+                text += "7: Näytä varaukset ryhmäliikuntatunnin mukaan.\n";
                 text += "0: Palaa päävalikkoon.\n";
                 Console.WriteLine(text);
                 char value = Console.ReadKey().KeyChar;
@@ -273,12 +282,27 @@ namespace Kettera_console
                         break;
                     case '3':
                         Console.Clear();
-                        gm.PrintAllGcCalendarEvents();
+                        gm.EditGroupClassReservation();
                         ContinuePrompt();
                         break;
                     case '4':
                         Console.Clear();
-                        gm.EditGroupClass();
+                        gm.PrintAllGcCalendarEvents();
+                        ContinuePrompt();
+                        break;
+                    case '5':
+                        Console.Clear();
+                        gm.PrintGcCalendarEventsByCustomer();
+                        ContinuePrompt();
+                        break;
+                    case '6':
+                        Console.Clear();
+                        gm.PrintGcCalendarEventsByTrainer();
+                        ContinuePrompt();
+                        break;
+                    case '7':
+                        Console.Clear();
+                        gm.PrintGcCalendarEventsByGroupClass();
                         ContinuePrompt();
                         break;
                     case '0':
@@ -298,11 +322,12 @@ namespace Kettera_console
                 string text;
                 text = "1: Lisää varaus.\n";
                 text += "2: Poista varaus.\n";
-                text += "3: Näytä valmentajan kalenteri.\n";
-                text += "4: Näytä kaikkien valmentajien kalenterit.\n";
-                text += "5: Näytä kalenterit tietyltä aikaväliltä.\n";
-                text += "6: Näytä valmentajan kalenteri tietyltä aikaväliltä.\n";
-                text += "7: Näytä valmentajan kalenteri asiakkaan ID:n perusteella.\n"; 
+                text += "3: Muokkaa varausta.\n";
+                text += "4: Näytä valmentajan kalenteri.\n";
+                text += "5: Näytä kaikkien valmentajien kalenterit.\n";
+                text += "6: Näytä kalenterit tietyltä aikaväliltä.\n";
+                text += "7: Näytä valmentajan kalenteri tietyltä aikaväliltä.\n";
+                text += "8: Näytä valmentajan kalenteri asiakkaan ID:n perusteella.\n"; 
                 text += "0: Palaa päävalikkoon.\n";
                 Console.WriteLine(text);
                 char value = Console.ReadKey().KeyChar;
@@ -320,25 +345,30 @@ namespace Kettera_console
                         break;
                     case '3':
                         Console.Clear();
-                        gm.PrintPtReservationsByPT();
+                        gm.EditPtReservation();
                         ContinuePrompt();
                         break;
                     case '4':
                         Console.Clear();
-                        gm.PrintPtReservations();
+                        gm.PrintPtReservationsByPT();
                         ContinuePrompt();
                         break;
                     case '5':
                         Console.Clear();
-                        gm.PrintPtReservationsFromTo();
+                        gm.PrintPtReservations();
                         ContinuePrompt();
                         break;
                     case '6':
                         Console.Clear();
-                        gm.PrintPtReservationsFromToByPT();
+                        gm.PrintPtReservationsFromTo();
                         ContinuePrompt();
                         break;
                     case '7':
+                        Console.Clear();
+                        gm.PrintPtReservationsFromToByPT();
+                        ContinuePrompt();
+                        break;
+                    case '8':
                         Console.Clear();
                         gm.PrintPtReservationsFromToByCustID();
                         ContinuePrompt();
@@ -432,7 +462,7 @@ namespace Kettera_console
                         break;
                     case '3':
                         Console.Clear();
-                        gm.TrainerCustomerCount();
+                        gm.TrainerCustomerVisitCount();
                         ContinuePrompt();
                         break;
                     case '4':
